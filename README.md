@@ -29,10 +29,12 @@ O projeto segue o padrão **MVVM (Model–View–ViewModel)**, garantindo separa
  ├── backend/
  │   ├── servermain.pas              # Ponto de entrada da aplicação Lazarus (inicializa o servidor)
  │   ├── controller_conversion.pas   # Controla requisições de conversão
- │   ├── service_api.pas             # Comunicação com a AwesomeAPI
+ │   ├── serviceapi.pas              # Comunicação com a AwesomeAPI
  │   ├── utils.pas                   # Funções auxiliares (formatar valores, logs, etc.)
  │   ├── backend.lpi                 # Arquivo de projeto Lazarus
- │   └── backend.lpr                 # Arquivo principal de execução
+ │   ├── backend.lpr                 # Arquivo principal de execução
+ |   ├── boss.json                   # Gerenciador de dependencias
+ │   └── boss-lock.json
  │
  ├── frontend/
  │   ├── lib/
@@ -52,6 +54,7 @@ O projeto segue o padrão **MVVM (Model–View–ViewModel)**, garantindo separa
  │   └── api_reference.md
  │
  ├── README.md
+ ├── LICENSE
  └── .gitignore
 
 ```
@@ -81,11 +84,10 @@ https://economia.awesomeapi.com.br/json/last/USD-BRL,EUR-BRL
 **Exemplo de retorno:**  
 ```json
 {
-  "USDBRL": {
-    "code": "USD",
-    "codein": "BRL",
-    "bid": "5.62"
-  }
+    "originalAmount": "1.00",
+    "fromCurrency": "USD",
+    "toCurrency": "BRL",
+    "convertedValue": "5.48"
 }
 ```
 
@@ -117,9 +119,11 @@ flutter run
 
 ## 🧭 Planejamento Futuro  
 
+- ☕ Cache no backend
 - 📜 Histórico de conversões  
-- 🎨 Adição de personalização de tema.
+- 🎨 Adição de personalização de tema
 - 💬 Inclusão de notificações com atualizações em tempo real
+- ☁️ Permitir seleção de múltiplas moedas
 
 ---
 
@@ -135,7 +139,6 @@ Você é livre para usar, modificar e redistribuir o software, desde que mantenh
 **👨‍💻 Gabriel Rodrigues**  
 📅 **Versão:** 1.0  
 🔗 **API:** [AwesomeAPI](https://docs.awesomeapi.com.br/api-de-moedas)  
-📬 **Contato:** *(opcional — adicione se quiser e-mail ou LinkedIn)*  
 
 ---
 
