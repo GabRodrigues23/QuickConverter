@@ -26,36 +26,41 @@ O projeto segue o padrão **MVVM (Model–View–ViewModel)**, garantindo separa
 ### Estrutura de pastas:
 ```
 📂 quickconverter/
- ├── backend/
- │   ├── servermain.pas              # Ponto de entrada da aplicação Lazarus (inicializa o servidor)
- │   ├── controller_conversion.pas   # Controla requisições de conversão
- │   ├── serviceapi.pas              # Comunicação com a AwesomeAPI
- │   ├── utils.pas                   # Funções auxiliares (formatar valores, logs, etc.)
- │   ├── backend.lpi                 # Arquivo de projeto Lazarus
- │   ├── backend.lpr                 # Arquivo principal de execução
- |   ├── boss.json                   # Gerenciador de dependencias
- │   └── boss-lock.json
+ ├── backend/                                   # Servidor em Lazarus (Pascal)
+ │   ├── servermain.pas                         # Ponto de entrada da aplicação Lazarus (inicializa o servidor)
+ │   ├── controller_conversion.pas              # Controla as requisições de conversão
+ │   ├── serviceapi.pas                         # Comunicação com a AwesomeAPI
+ │   ├── utils.pas                              # Funções auxiliares (formatação, logs, etc.)
+ │   ├── backend.lpi                            # Arquivo de projeto Lazarus
+ │   ├── backend.lpr                            # Arquivo principal de execução
+ │   ├── boss.json                              # Gerenciador de dependências (Boss)
+ │   └── boss-lock.json                         # Lockfile do Boss
  │
- ├── frontend/
+ ├── frontend/                                  # Aplicação Flutter (interface do usuário)
  │   ├── lib/
- │   │   ├── model/
- │   │   │   ├── currency_model.dart
- │   │   │   └── conversion_result.dart
- │   │   ├── viewmodel/
- │   │   │   └── converter_viewmodel.dart
- │   │   ├── view/
- │   │   │   └── converter_page.dart
- │   │   └── main.dart
- │   └── assets/
- │       └── icons/
+ │   │   ├── core/                              # Núcleo do app
+ │   │   │   └── constants.dart                 # Constantes globais (ex: URL da API)
+ │   │   ├── data/                              # Camada de dados
+ │   │   │   ├── repository/
+ │   │   │   │   └── conversion_repository.dart # Comunicação com a API
+ │   │   │   └── model/
+ │   │   │       ├── currency_model.dart        # Modelo de dados das moedas
+ │   │   │       └── conversion_result.dart     # Modelo do resultado da conversão
+ │   │   ├── ui/                                # Camada de apresentação (interface)
+ │   │   │   ├── viewmodel/
+ │   │   │   │   └── converter_viewmodel.dart   # Lógica e estado da tela de conversão
+ │   │   │   └── view/
+ │   │   │       ├── widgets/                   # Widgets reutilizáveis (ex: botões, inputs, etc.)
+ │   │   │       └── converter_page.dart        # Tela principal de conversão
+ │   │   └── main.dart                          # Ponto de entrada da aplicação Flutter
  │
- ├── docs/
- │   ├── moneyconverter_doc.md
- │   └── api_reference.md
+ ├── docs/                                      # Documentação do projeto
+ │   ├── moneyconverter_doc.md                  # Descrição geral do projeto
+ │   └── api_reference.md                       # Referência da API
  │
- ├── README.md
- ├── LICENSE
- └── .gitignore
+ ├── README.md                                  # Informações gerais do projeto
+ ├── LICENSE                                    # Licença de uso
+ └── .gitignore                                 # Arquivos e pastas ignorados pelo Git
 
 ```
 
