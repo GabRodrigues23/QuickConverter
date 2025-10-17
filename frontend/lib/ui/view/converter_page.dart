@@ -15,14 +15,19 @@ class ConverterPage extends StatefulWidget {
 
 class _ConverterPageState extends State<ConverterPage> {
   // Controller para o campo de entrada do valor a ser convertido.
-  final _amountController = TextEditingController();
+  final _amountControllerFrom = TextEditingController();
+  final _amountControllerTo = TextEditingController();
 
   // O método dispose é chamado quando a tela é destruída. Limpa os controllers para evitar vazamentos de memória.
   @override
   void dispose() {
-    _amountController.dispose();
+    _amountControllerFrom.dispose();
+    _amountControllerTo.dispose();
     super.dispose();
   }
+
+  List<String> currencies = ['USD', 'BRL', 'EUR', 'GBP', 'JPY'];
+  String? selectedCurrency;
 
   @override
   Widget build(BuildContext context) {
@@ -31,55 +36,148 @@ class _ConverterPageState extends State<ConverterPage> {
       body: SafeArea(
         child: Center(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 50.0, vertical: 40.0),
             child: Consumer<ConverterViewModel>(
               builder: (context, viewModel, child) {
                 return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Text(
-                      'QUICKCONVERTER',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      'Simple Money Converter',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 16, color: Colors.white70),
-                    ),
-                    const SizedBox(height: 40),
-
-                    // ---- Seção "FROM" ----
-                    TextField(
-                      controller: _amountController,
-                      keyboardType: TextInputType.number,
-                      style: const TextStyle(color: Colors.black, fontSize: 18),
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.white,
-                        hintText: 'R\$ 0.00',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide.none,
+                    const Column(
+                      children: [
+                        const Text(
+                          'QUICKCONVERTER',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
+                        const Text(
+                          'Simple Money Converter',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 16, color: Colors.white70),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 20),
-
-                    // ---- Botão de Conversão ----
+                    const SizedBox(height: 50),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'From:',
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
+                        const SizedBox(height: 10),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: DropdownButton<String>(
+                            value: selectedCurrency,
+                            isExpanded: true,
+                            underline: const SizedBox(),
+                            hint: const Text(
+                              'Selecione a Cotação',
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                            items: currencies.map((String currency) {
+                              return DropdownMenuItem<String>(
+                                value: currency,
+                                child: Text(currency),
+                              );
+                            }).toList(),
+                            onChanged: (newValue) {
+                              setState(() {});
+                            },
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        TextField(
+                          controller: _amountControllerFrom,
+                          keyboardType: TextInputType.number,
+                          style: const TextStyle(
+                              color: Colors.black, fontSize: 18),
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white,
+                            hintText: 'R\$ 0.00',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    if (viewModel.isLoading)
+                      const Center(
+                          child: CircularProgressIndicator(color: Colors.white))
+                    else
+                      Icon(Icons.swap_vert, color: Colors.white, size: 35),
+                    const SizedBox(height: 10),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'To:',
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
+                        const SizedBox(height: 10),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: DropdownButton<String>(
+                            value: selectedCurrency,
+                            isExpanded: true,
+                            underline: const SizedBox(),
+                            hint: const Text(
+                              'Selecione a Cotação',
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                            items: currencies.map((String currency) {
+                              return DropdownMenuItem<String>(
+                                value: currency,
+                                child: Text(currency),
+                              );
+                            }).toList(),
+                            onChanged: (newValue) {
+                              setState(() {});
+                            },
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        TextField(
+                          controller: _amountControllerTo,
+                          keyboardType: TextInputType.number,
+                          style: const TextStyle(
+                              color: Colors.black, fontSize: 18),
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white,
+                            hintText: 'R\$ 0.00',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                     ElevatedButton(
                       onPressed: () {
-                        // Quando o botão é pressionado, chamamos a função do ViewModel.
                         viewModel.performConversion(
                           from: 'USD', // Valor fixo por enquanto
                           to: 'BRL', // Valor fixo por enquanto
-                          amount: _amountController.text,
+                          amount: '100.00',
                         );
                       },
                       style: ElevatedButton.styleFrom(
@@ -94,32 +192,6 @@ class _ConverterPageState extends State<ConverterPage> {
                         style: TextStyle(fontSize: 18, color: Colors.white),
                       ),
                     ),
-                    const SizedBox(height: 20),
-
-                    // ---- Seção de RESULTADO (Reativa) ----
-                    if (viewModel.isLoading)
-                      // Se estiver carregando, mostra o spinner.
-                      const Center(
-                          child: CircularProgressIndicator(color: Colors.white))
-                    else if (viewModel.errorMessage != null)
-                      // Se tiver um erro, mostra a mensagem.
-                      Text(
-                        viewModel.errorMessage!,
-                        style: const TextStyle(
-                            color: Colors.redAccent, fontSize: 16),
-                        textAlign: TextAlign.center,
-                      )
-                    else if (viewModel.conversionResult != null)
-                      // Se tiver um resultado, mostra o valor.
-                      Text(
-                        'Resultado: ${viewModel.conversionResult!.convertedValue}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
                   ],
                 );
               },
