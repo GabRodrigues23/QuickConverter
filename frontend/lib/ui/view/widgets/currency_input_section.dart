@@ -81,7 +81,6 @@ class CurrencyInputSection extends StatelessWidget {
                       const TextInputType.numberWithOptions(decimal: true),
                   style: const TextStyle(color: Colors.black, fontSize: 18),
                   decoration: const InputDecoration(
-                    hintText: '0,00',
                     border: InputBorder.none,
                     isDense: false,
                   ),

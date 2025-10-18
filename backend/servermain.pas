@@ -6,7 +6,7 @@ interface
 
 uses
   SysUtils, Horse, Horse.Jhonson,
-  controller_conversion;
+  controller_conversion, controller_currencies;
 
 implementation
 
@@ -18,4 +18,5 @@ end;
 begin
   THorse.Get('/ping', GetPing);
   THorse.Get('/convert', THorseCallback(@ControllerConversion));
+  THorse.Get('/currencies', THorseCallback(@ControllerCurrencies));
 end.

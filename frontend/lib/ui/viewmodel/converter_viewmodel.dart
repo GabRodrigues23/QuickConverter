@@ -9,13 +9,35 @@ class ConverterViewModel extends ChangeNotifier {
   bool _isLoading = false;
   String? _errorMessage;
 
-  // Getters para acessar os estados
+  List<String> _currencies = [];
+  bool _isCurrenciesLoading = false;
+  String? _currenciesError;
+
   ConversionResult? get conversionResult => _conversionResult;
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
+  List<String> get currencies => _currencies;
+  bool get isCurrenciesLoading => _isCurrenciesLoading;
+  String? get currenciesError => _currenciesError;
 
-  // Construtor com Injeção de Dependência (Repository)
-  ConverterViewModel(this._repository);
+  ConverterViewModel(this._repository) {
+    fetchCurrencies();
+  }
+
+  Future<void> fetchCurrencies() async {
+    _isCurrenciesLoading = true;
+    _currenciesError = null;
+    notifyListeners();
+
+    try {
+      _currencies = await _repository.getAvailableCurrencies();
+    } catch (e) {
+      _currenciesError = e.toString();
+    } finally {
+      _isCurrenciesLoading = false;
+      notifyListeners();
+    }
+  }
 
   Future<void> performConversion(
       {required String from,
@@ -25,7 +47,6 @@ class ConverterViewModel extends ChangeNotifier {
     _errorMessage = null;
     notifyListeners();
     try {
-      // Chama o repositório para realizar a "conversão"
       final result = await _repository.convert(
         from: from,
         to: to,
@@ -34,10 +55,8 @@ class ConverterViewModel extends ChangeNotifier {
 
       _conversionResult = result;
     } catch (e) {
-      // Caso ocorra algum erro (simulado ou real futuramente)
       _errorMessage = 'Erro ao realizar conversão: $e';
     } finally {
-      // Atualiza o estado final (sempre executado)
       _isLoading = false;
       notifyListeners();
     }

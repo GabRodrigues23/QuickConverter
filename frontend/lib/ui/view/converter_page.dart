@@ -15,16 +15,16 @@ class _ConverterPageState extends State<ConverterPage> {
   final _fromAmountController = TextEditingController();
   final _toAmountController = TextEditingController();
 
-  String? _fromCurrency = 'USD';
-  String? _toCurrency = 'BRL';
-  final List<String> currencies = ['USD', 'BRL', 'EUR', 'GBP', 'JPY'];
+  String? _fromCurrency;
+  String? _toCurrency;
 
   final Map<String, String> currencySymbols = {
-    'USD': '\$  ',
+    'USD': '\$ ',
     'BRL': 'R\$ ',
-    'EUR': '€  ',
-    'GBP': '£  ',
-    'JPY': '¥  ',
+    'GBP': '£ ',
+    'ARS': '\$ ',
+    'EUR': '€ ',
+    'JPY': '¥ ',
   };
 
   @override
@@ -35,21 +35,19 @@ class _ConverterPageState extends State<ConverterPage> {
   }
 
   void _swapCurrencies() {
+    final tempCurrency = _fromCurrency;
     setState(() {
-      final temp = _fromCurrency;
       _fromCurrency = _toCurrency;
-      _toCurrency = temp;
-
-      final String resultValue = _toAmountController.text;
-      _fromAmountController.clear();
-      _toAmountController.clear();
-
-      _fromAmountController.text = resultValue;
+      _toCurrency = tempCurrency;
     });
+
+    final String resultValue = _toAmountController.text;
+    _toAmountController.text = _fromAmountController.text;
+    _fromAmountController.text = resultValue;
   }
 
   void _formatAmountInput() {
-    final text = _fromAmountController.text.replaceAll('.', ',');
+    final text = _fromAmountController.text.replaceAll(',', '.');
     final value = double.tryParse(text);
     if (value == null) return;
 
@@ -61,8 +59,6 @@ class _ConverterPageState extends State<ConverterPage> {
 
   @override
   Widget build(BuildContext context) {
-    final fromCurrencies = currencies.where((c) => c != _toCurrency).toList();
-    final toCurrencies = currencies.where((c) => c != _fromCurrency).toList();
     return Scaffold(
       backgroundColor: const Color(0xFF4A90E2),
       body: SafeArea(
@@ -73,137 +69,150 @@ class _ConverterPageState extends State<ConverterPage> {
                   const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
               child: Consumer<ConverterViewModel>(
                 builder: (context, viewModel, child) {
-                  if (viewModel.conversionResult != null &&
-                      !viewModel.isLoading) {
-                    final valueWithDot =
-                        viewModel.conversionResult!.convertedValue;
-                    _toAmountController.text =
-                        valueWithDot.replaceAll('.', ',');
+                  if (viewModel.isCurrenciesLoading) {
+                    return const Center(
+                        child: CircularProgressIndicator(color: Colors.white));
                   }
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      const Text(
-                        'QUICKCONVERTER',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      const Text(
-                        'Simple Money Converter',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 16, color: Colors.white70),
-                      ),
-                      const SizedBox(height: 40),
-                      Column(
-                        children: [
-                          CurrencyInputSection(
-                            label: 'From:',
-                            onEditingComplete: _formatAmountInput,
-                            selectedCurrency: _fromCurrency,
-                            currencies: fromCurrencies,
-                            onCurrencyChanged: (newValue) {
-                              if (newValue == _toCurrency) {
-                                _swapCurrencies();
-                              } else {
-                                setState(() {
-                                  _fromCurrency = newValue;
-                                });
-                              }
-                            },
-                            amountController: _fromAmountController,
-                            currencySymbols: currencySymbols,
-                          ),
-                          const SizedBox(height: 15),
-                          IconButton(
-                            icon: const Icon(Icons.swap_vert,
-                                color: Colors.white, size: 35),
-                            onPressed: _swapCurrencies,
-                          ),
-                          const SizedBox(height: 15),
-                          CurrencyInputSection(
-                            label: 'To:',
-                            onEditingComplete: _formatAmountInput,
-                            selectedCurrency: _toCurrency,
-                            currencies: toCurrencies,
-                            onCurrencyChanged: (newValue) {
-                              if (newValue == _fromCurrency) {
-                                _swapCurrencies();
-                              } else {
-                                setState(() {
-                                  _toCurrency = newValue;
-                                });
-                              }
-                            },
-                            amountController: _toAmountController,
-                            currencySymbols: currencySymbols,
-                            isReadOnly: true,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 30),
-                      ElevatedButton(
-                        onPressed: viewModel.isLoading
-                            ? null
-                            : () {
-                                _formatAmountInput();
-                                final amount = double.tryParse(
-                                    _fromAmountController.text
-                                        .replaceAll(',', '.'));
-                                if (_fromCurrency != null &&
-                                    _toCurrency != null &&
-                                    amount! > 0) {
-                                  final sanitizedAmount = _fromAmountController
-                                      .text
-                                      .replaceAll(',', '.');
-
-                                  viewModel.performConversion(
-                                    from: _fromCurrency!,
-                                    to: _toCurrency!,
-                                    amount: sanitizedAmount,
-                                  );
-                                }
-                              },
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          backgroundColor: Colors.black54,
-                          disabledBackgroundColor: Colors.grey.shade700,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12)),
-                        ),
-                        child: viewModel.isLoading
-                            ? const SizedBox(
-                                height: 24,
-                                width: 24,
-                                child: CircularProgressIndicator(
-                                    strokeWidth: 3, color: Colors.white),
-                              )
-                            : const Text('Converter',
-                                style: TextStyle(
-                                    fontSize: 18, color: Colors.white)),
-                      ),
-                      const SizedBox(height: 20),
-                      if (viewModel.errorMessage != null)
-                        Text(
-                          viewModel.errorMessage!,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                              color: Colors.redAccent,
-                              fontWeight: FontWeight.bold),
-                        ),
-                    ],
-                  );
+                  if (viewModel.currenciesError != null) {
+                    return Center(
+                      child: Text(viewModel.currenciesError!,
+                          style: const TextStyle(color: Colors.redAccent)),
+                    );
+                  }
+                  return _buildConverterForm(viewModel);
                 },
               ),
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildConverterForm(ConverterViewModel viewModel) {
+    if (_fromCurrency == null && viewModel.currencies.isNotEmpty) {
+      _fromCurrency = viewModel.currencies.contains('USD')
+          ? 'USD'
+          : viewModel.currencies.first;
+      _toCurrency = viewModel.currencies.contains('BRL')
+          ? 'BRL'
+          : viewModel.currencies.last;
+    }
+
+    if (viewModel.conversionResult != null && !viewModel.isLoading) {
+      final valueWithDot = viewModel.conversionResult!.convertedValue;
+      _toAmountController.text = valueWithDot.replaceAll('.', ',');
+    }
+
+    final currencies = viewModel.currencies;
+    final fromCurrencies = currencies.where((c) => c != _toCurrency).toList();
+    final toCurrencies = currencies.where((c) => c != _fromCurrency).toList();
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const Text('QUICKCONVERTER',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                color: Colors.white)),
+        const SizedBox(height: 8),
+        const Text('Simple Money Converter',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 16, color: Colors.white70)),
+        const SizedBox(height: 40),
+        Column(
+          children: [
+            CurrencyInputSection(
+              label: 'From:',
+              selectedCurrency: _fromCurrency,
+              currencies: fromCurrencies,
+              currencySymbols: currencySymbols,
+              onCurrencyChanged: (newValue) {
+                setState(() {
+                  if (newValue == _toCurrency) {
+                    _toCurrency = _fromCurrency;
+                  }
+                  _fromCurrency = newValue;
+                });
+              },
+              amountController: _fromAmountController,
+              onEditingComplete: _formatAmountInput,
+            ),
+            const SizedBox(height: 15),
+            IconButton(
+              icon: const Icon(Icons.swap_vert, color: Colors.white, size: 35),
+              onPressed: _swapCurrencies,
+            ),
+            const SizedBox(height: 15),
+            CurrencyInputSection(
+              label: 'To:',
+              selectedCurrency: _toCurrency,
+              currencies: toCurrencies,
+              currencySymbols: currencySymbols,
+              onCurrencyChanged: (newValue) {
+                setState(() {
+                  if (newValue == _fromCurrency) {
+                    _fromCurrency = _toCurrency;
+                  }
+                  _toCurrency = newValue;
+                });
+              },
+              amountController: _toAmountController,
+              isReadOnly: true,
+            ),
+          ],
+        ),
+        const SizedBox(height: 30),
+
+        ElevatedButton(
+          onPressed: viewModel.isLoading
+              ? null
+              : () {
+                  _formatAmountInput();
+                  if (_fromCurrency != null &&
+                      _toCurrency != null &&
+                      _fromAmountController.text.isNotEmpty) {
+                    final amount = double.tryParse(
+                            _fromAmountController.text.replaceAll(',', '.')) ??
+                        0.0;
+                    if (amount > 0) {
+                      viewModel.performConversion(
+                        from: _fromCurrency!,
+                        to: _toCurrency!,
+                        amount: _fromAmountController.text.replaceAll(',', '.'),
+                      );
+                    }
+                  }
+                },
+          style: ElevatedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            backgroundColor: Colors.black54,
+            disabledBackgroundColor: Colors.grey.shade700,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          ),
+          child: viewModel.isLoading
+              ? const SizedBox(
+                  height: 24,
+                  width: 24,
+                  child: CircularProgressIndicator(
+                      strokeWidth: 3, color: Colors.white))
+              : const Text('Converter',
+                  style: TextStyle(fontSize: 18, color: Colors.white)),
+        ),
+        const SizedBox(height: 20),
+
+        if (viewModel.errorMessage != null)
+          Text(
+            viewModel.errorMessage!,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+                color: Colors.redAccent, fontWeight: FontWeight.bold),
+          ),
+      ],
     );
   }
 }
