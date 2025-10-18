@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CurrencyInputSection extends StatelessWidget {
   final String label;
@@ -7,6 +8,7 @@ class CurrencyInputSection extends StatelessWidget {
   final Function(String?) onCurrencyChanged;
   final TextEditingController? amountController;
   final bool isReadOnly;
+  final VoidCallback? onEditingComplete;
   final Map<String, String> currencySymbols;
 
   const CurrencyInputSection({
@@ -15,9 +17,10 @@ class CurrencyInputSection extends StatelessWidget {
     required this.selectedCurrency,
     required this.currencies,
     required this.onCurrencyChanged,
-    required this.currencySymbols,
     this.amountController,
     this.isReadOnly = false,
+    this.onEditingComplete,
+    required this.currencySymbols,
   });
 
   @override
@@ -72,15 +75,20 @@ class CurrencyInputSection extends StatelessWidget {
               Expanded(
                 child: TextField(
                   controller: amountController,
+                  onEditingComplete: onEditingComplete,
                   readOnly: isReadOnly,
                   keyboardType:
                       const TextInputType.numberWithOptions(decimal: true),
                   style: const TextStyle(color: Colors.black, fontSize: 18),
                   decoration: const InputDecoration(
-                    hintText: '0.00',
+                    hintText: '0,00',
                     border: InputBorder.none,
                     isDense: false,
                   ),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(
+                        RegExp(r'^\d*([.,])?\d{0,2}$')),
+                  ],
                 ),
               ),
             ],

@@ -17,11 +17,14 @@ var
   Amount: double;
   ResultValue: double;
   JSONObject: TJSONObject;
+  fs: TFormatSettings;
 begin
+  fs := DefaultFormatSettings;
+  fs.DecimalSeparator := '.';
   try
     FromCurrency := Req.Query['from'];
     ToCurrency := Req.Query['to'];
-    Amount := StrToFloat(Req.Query['amount']);
+    Amount := StrToFloat(Req.Query['amount'], fs);
 
     ResultValue := ConvertCurrency(FromCurrency, ToCurrency, amount);
 

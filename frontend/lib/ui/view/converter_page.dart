@@ -20,11 +20,11 @@ class _ConverterPageState extends State<ConverterPage> {
   final List<String> currencies = ['USD', 'BRL', 'EUR', 'GBP', 'JPY'];
 
   final Map<String, String> currencySymbols = {
-    'USD': '\$ ',
+    'USD': '\$  ',
     'BRL': 'R\$ ',
-    'EUR': '€ ',
-    'GBP': '£ ',
-    'JPY': '¥ ',
+    'EUR': '€  ',
+    'GBP': '£  ',
+    'JPY': '¥  ',
   };
 
   @override
@@ -48,6 +48,17 @@ class _ConverterPageState extends State<ConverterPage> {
     });
   }
 
+  void _formatAmountInput() {
+    final text = _fromAmountController.text.replaceAll('.', ',');
+    final value = double.tryParse(text);
+    if (value == null) return;
+
+    final formattedWithDot = value.toStringAsFixed(2);
+    final formattedWithComma = formattedWithDot.replaceAll('.', ',');
+
+    _fromAmountController.text = formattedWithComma;
+  }
+
   @override
   Widget build(BuildContext context) {
     final fromCurrencies = currencies.where((c) => c != _toCurrency).toList();
@@ -64,8 +75,10 @@ class _ConverterPageState extends State<ConverterPage> {
                 builder: (context, viewModel, child) {
                   if (viewModel.conversionResult != null &&
                       !viewModel.isLoading) {
-                    _toAmountController.text =
+                    final valueWithDot =
                         viewModel.conversionResult!.convertedValue;
+                    _toAmountController.text =
+                        valueWithDot.replaceAll('.', ',');
                   }
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -91,6 +104,7 @@ class _ConverterPageState extends State<ConverterPage> {
                         children: [
                           CurrencyInputSection(
                             label: 'From:',
+                            onEditingComplete: _formatAmountInput,
                             selectedCurrency: _fromCurrency,
                             currencies: fromCurrencies,
                             onCurrencyChanged: (newValue) {
@@ -114,6 +128,7 @@ class _ConverterPageState extends State<ConverterPage> {
                           const SizedBox(height: 15),
                           CurrencyInputSection(
                             label: 'To:',
+                            onEditingComplete: _formatAmountInput,
                             selectedCurrency: _toCurrency,
                             currencies: toCurrencies,
                             onCurrencyChanged: (newValue) {
@@ -136,13 +151,21 @@ class _ConverterPageState extends State<ConverterPage> {
                         onPressed: viewModel.isLoading
                             ? null
                             : () {
+                                _formatAmountInput();
+                                final amount = double.tryParse(
+                                    _fromAmountController.text
+                                        .replaceAll(',', '.'));
                                 if (_fromCurrency != null &&
                                     _toCurrency != null &&
-                                    _fromAmountController.text.isNotEmpty) {
+                                    amount! > 0) {
+                                  final sanitizedAmount = _fromAmountController
+                                      .text
+                                      .replaceAll(',', '.');
+
                                   viewModel.performConversion(
                                     from: _fromCurrency!,
                                     to: _toCurrency!,
-                                    amount: _fromAmountController.text,
+                                    amount: sanitizedAmount,
                                   );
                                 }
                               },
