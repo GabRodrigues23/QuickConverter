@@ -1,7 +1,6 @@
 class ConversionResult {
   final String originalAmount, fromCurrency, toCurrency, convertedValue;
 
-// Construtor que inicializa todas as propriedades obrigatórias.
   ConversionResult({
     required this.originalAmount,
     required this.fromCurrency,
@@ -9,7 +8,6 @@ class ConversionResult {
     required this.convertedValue,
   });
 
-  // Construtor para criar uma instância de ConversionResult a partir de um JSON.
   factory ConversionResult.fromJson(Map<String, dynamic> json) {
     return ConversionResult(
         originalAmount: json['originalAmount'] ?? '',
@@ -18,7 +16,6 @@ class ConversionResult {
         convertedValue: json['convertedValue'] ?? '');
   }
 
-  // Método para converter a instância atual em um JSON.
   Map<String, dynamic> toJson() {
     return {
       'originalAmount': originalAmount,
@@ -28,7 +25,6 @@ class ConversionResult {
     };
   }
 
-  // Facilita na depuração, imprimindo os valores das propriedades como String.
   @override
   String toString() {
     return 'ConversionResult(originalAmount: $originalAmount, fromCurrency: $fromCurrency, toCurrency: $toCurrency, convertedValue: $convertedValue)';
