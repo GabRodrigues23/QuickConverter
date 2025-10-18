@@ -27,21 +27,21 @@ class CurrencyInputSection extends StatelessWidget {
       children: [
         Text(
           label,
-          style: const TextStyle(color: Colors.white, fontSize: 16),
+          style: const TextStyle(color: Colors.white, fontSize: 18),
         ),
         const SizedBox(height: 10),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(8),
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
               value: selectedCurrency,
               isExpanded: true,
-              hint:
-                  const Text('Selecione', style: TextStyle(color: Colors.grey)),
+              hint: const Text('Selecione uma Cotação',
+                  style: TextStyle(color: Colors.grey)),
               items: currencies.map((String currency) {
                 return DropdownMenuItem<String>(
                   value: currency,
@@ -54,20 +54,36 @@ class CurrencyInputSection extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 10),
-        TextField(
-          controller: amountController,
-          readOnly: isReadOnly,
-          keyboardType: const TextInputType.numberWithOptions(decimal: true),
-          style: const TextStyle(color: Colors.black, fontSize: 18),
-          decoration: InputDecoration(
-            prefixText: currencySymbols[selectedCurrency] ?? '',
-            filled: true,
-            fillColor: isReadOnly ? Colors.grey[200] : Colors.white,
-            hintText: '0.00',
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide.none,
-            ),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          decoration: BoxDecoration(
+            color: isReadOnly ? Colors.grey[200] : Colors.white,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Row(
+            children: [
+              SizedBox(
+                width: 30,
+                child: Text(
+                  currencySymbols[selectedCurrency] ?? '',
+                  style: const TextStyle(color: Colors.black54, fontSize: 18),
+                ),
+              ),
+              Expanded(
+                child: TextField(
+                  controller: amountController,
+                  readOnly: isReadOnly,
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                  style: const TextStyle(color: Colors.black, fontSize: 18),
+                  decoration: const InputDecoration(
+                    hintText: '0.00',
+                    border: InputBorder.none,
+                    isDense: false,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ],
