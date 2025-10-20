@@ -1,142 +1,86 @@
-# 🪙 QuickConverter  
-### *Simple Money Converter*  
+# 🚀 QuickConverter
 
-![Flutter](https://img.shields.io/badge/Frontend-Flutter-blue?logo=flutter)
-![Lazarus](https://img.shields.io/badge/Backend-Lazarus-orange)
-![API](https://img.shields.io/badge/API-AwesomeAPI-green)
-![License](https://img.shields.io/badge/License-MIT-lightgrey)
+<div align="center"><img src="https://i.imgur.com/SXrzs90.png" alt="QuickConverter Screenshot" width="300"/></div>
 
-Um conversor de moedas simples e direto, desenvolvido em **Flutter** (frontend) e **Lazarus** (backend), utilizando a **AwesomeAPI** para obter cotações em tempo real.
+![Lazarus](https://img.shields.io/badge/Lazarus-Pascal-blue?style=for-the-badge&logo=delphi)
+![Flutter](https://img.shields.io/badge/Flutter-Dart-02569B?style=for-the-badge&logo=flutter)
+![AWS](https://img.shields.io/badge/AWS-EC2-FF9900?style=for-the-badge&logo=amazon-aws)
 
----
-
-## 🚀 Funcionalidades  
-
-- 💱 Converter valores entre diferentes moedas.  
-- 🌐 Obter taxas de câmbio atualizadas via API.  
-- 💡 Interface moderna, leve e responsiva.  
-- 🧠 Estrutura baseada no padrão **MVVM**.  
+Um conversor de moedas simples, porém robusto, construído com uma stack full stack moderna, utilizando Lazarus (Free Pascal) para o backend e Flutter para o frontend. O projeto foi totalmente implantado na AWS, demonstrando um ciclo de vida completo de desenvolvimento e deploy.
 
 ---
 
-## 🧩 Arquitetura  
+## ✨ Features
 
-O projeto segue o padrão **MVVM (Model–View–ViewModel)**, garantindo separação clara entre interface, lógica e dados.  
+* Conversão de moedas em tempo real utilizando a [AwesomeAPI](https://docs.awesomeapi.com.br).
+* Interface reativa e amigável construída com Flutter.
+* Backend intermediário para controle de lógica e futuras implementações (como cache).
+* Seleção dinâmica de moedas.
+* Troca rápida entre as moedas de origem e destino.
+* Formatação de input para uma melhor experiência do usuário.
 
-### Estrutura de pastas:
+---
+
+## 🛠️ Stack de Tecnologias
+
+* **Backend:**
+    * **Linguagem:** Free Pascal (com Lazarus IDE)
+    * **Framework:** [Horse](https://github.com/HashLoad/horse)
+    * **Middleware JSON:** [Jhonson](https://github.com/HashLoad/jhonson)
+* **Frontend:**
+    * **Framework:** [Flutter](https://flutter.dev/)
+    * **Linguagem:** Dart
+    * **Gerenciamento de Estado:** Provider (ChangeNotifier)
+    * **Arquitetura:** MVVM (Model-View-ViewModel)
+* **Infraestrutura (Deploy):**
+    * **Cloud:** [Amazon Web Services (AWS)](https://aws.amazon.com/)
+    * **Serviço:** EC2 (Windows Server 2019)
+
+---
+
+## ⚙️ Como Executar Localmente
+
+### Pré-requisitos
+
+* [Lazarus IDE](https://www.lazarus-ide.org/) instalado.
+* [Flutter SDK](https://flutter.dev/docs/get-started/install) instalado.
+* DLLs do OpenSSL (`libeay32.dll` e `ssleay32.dll`) na pasta do backend.
+* Biblioteca [Jhonson](https://github.com/HashLoad/jhonson) configurada no projeto Lazarus.
+
+### 1. Backend (Lazarus)
+
+1.  Abra o arquivo `backend/backend.lpi` no Lazarus IDE.
+2.  Compile e execute o projeto (`F9`). O servidor iniciará na porta `9000`.
+
+### 2. Frontend (Flutter)
+
+1.  Navegue até a pasta `frontend/`.
+2.  **Crie um arquivo chamado `.env`** na raiz da pasta `frontend/`.
+3.  Adicione a seguinte linha ao arquivo `.env` para apontar para o seu servidor local:
+    ```
+    API_URL=http://localhost:9000
+    ```
+4.  Execute o app em um emulador, navegador ou dispositivo físico:
+    ```bash
+    flutter run
+    ```
+
+---
+
+## ☁️ Informações do Deploy (AWS)
+
+A API está hospedada em uma instância EC2 da AWS. Para que o aplicativo Flutter se comunique com o servidor na nuvem, o arquivo `.env` deve ser configurado com o IP público da instância:
+
 ```
-📂 quickconverter/
- ├── backend/
- │   ├── servermain.pas              # Ponto de entrada da aplicação Lazarus (inicializa o servidor)
- │   ├── controller_conversion.pas   # Controla requisições de conversão
- │   ├── service_api.pas             # Comunicação com a AwesomeAPI
- │   ├── utils.pas                   # Funções auxiliares (formatar valores, logs, etc.)
- │   ├── backend.lpi                 # Arquivo de projeto Lazarus
- │   └── backend.lpr                 # Arquivo principal de execução
- │
- ├── frontend/
- │   ├── lib/
- │   │   ├── model/
- │   │   │   ├── currency_model.dart
- │   │   │   └── conversion_result.dart
- │   │   ├── viewmodel/
- │   │   │   └── converter_viewmodel.dart
- │   │   ├── view/
- │   │   │   └── converter_page.dart
- │   │   └── main.dart
- │   └── assets/
- │       └── icons/
- │
- ├── docs/
- │   ├── moneyconverter_doc.md
- │   └── api_reference.md
- │
- ├── README.md
- └── .gitignore
-
+# Exemplo de conteúdo do arquivo .env para produção
+API_URL=http://SEU_IP_PUBLICO_DA_AWS:9000
 ```
+**Nota:** O arquivo `.env` está listado no `.gitignore` e não deve ser versionado, garantindo que as configurações de produção não sejam expostas no repositório.
 
 ---
 
-## ⚙️ Tecnologias Utilizadas  
+## 👤 Autor
 
-| Camada | Tecnologia | Descrição |
-|--------|-------------|-----------|
-| 💻 **Frontend** | Flutter | Interface multiplataforma (Android, iOS, Desktop) |
-| ⚙️ **Backend** | Lazarus (Free Pascal) | Lógica e integração da API |
-| 🌐 **API Externa** | AwesomeAPI | Fornece cotações em tempo real |
-| 🧠 **Arquitetura** | MVVM | Estrutura modular e escalável |
-| 🎨 **Design** | Figma | Protótipo visual e layout da interface |
-| 🔁 **Versionamento** | Git / GitHub | Controle de versão do projeto |
+**Gabriel Rodrigues**
 
----
-
-## 🧾 Exemplo de Requisição  
-
-**Endpoint base:**  
-```
-https://economia.awesomeapi.com.br/json/last/USD-BRL,EUR-BRL
-```
-
-**Exemplo de retorno:**  
-```json
-{
-  "USDBRL": {
-    "code": "USD",
-    "codein": "BRL",
-    "bid": "5.62"
-  }
-}
-```
-
-**Cálculo aplicado:**  
-```
-valorConvertido = valorDigitado * bid
-```
-
----
-
-## ▶️ Como Executar  
-
-### 🧠 Backend (Lazarus)
-1. Abra o arquivo `converter.lpr` no Lazarus.  
-2. Compile e execute o servidor local.  
-
-### 💻 Frontend (Flutter)
-```bash
-flutter pub get
-flutter run
-```
-
-### ✅ Teste
-- Selecione as moedas de origem e destino.  
-- Digite o valor desejado.  
-- Veja o resultado convertido instantaneamente.  
-
----
-
-## 🧭 Planejamento Futuro  
-
-- 📜 Histórico de conversões  
-- 🎨 Adição de personalização de tema.
-- 💬 Inclusão de notificações com atualizações em tempo real
-
----
-
-## 📄 Licença  
-
-Este projeto está sob a licença **MIT**.  
-Você é livre para usar, modificar e redistribuir o software, desde que mantenha os créditos originais.  
-
----
-
-## ✨ Autor  
-
-**👨‍💻 Gabriel Rodrigues**  
-📅 **Versão:** 1.0  
-🔗 **API:** [AwesomeAPI](https://docs.awesomeapi.com.br/api-de-moedas)  
-📬 **Contato:** *(opcional — adicione se quiser e-mail ou LinkedIn)*  
-
----
-
-> *“Simples, rápido e eficiente — porque converter moedas não precisa ser complicado.”* 💸  
+Desenvolvedor Full Stack (Lazarus + Flutter)

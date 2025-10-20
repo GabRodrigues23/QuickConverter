@@ -1,0 +1,39 @@
+name: QuickConverter
+description: "A Simple Money Converter"
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.6.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+  provider: ^6.1.5+1
+  http: ^1.5.0
+  flutter_dotenv: ^6.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.14.4
+
+flutter_icons:
+    android: true
+    ios: true
+    image_path: "assets/icon/quickconverter_icon.ico"
+
+# The following section is specific to Flutter packages.
+flutter:
+  assets:
+    - .env
+    - assets/icon/quickconverter_icon.ico
+  
+  uses-material-design: true
+
+  
