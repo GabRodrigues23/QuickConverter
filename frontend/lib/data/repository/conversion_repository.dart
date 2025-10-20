@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
-
 import 'package:http/http.dart' as http;
 
 import '../../core/constants.dart';
@@ -8,12 +6,7 @@ import '../model/conversion_result.dart';
 
 class ConversionRepository {
   Future<List<String>> getAvailableCurrencies() async {
-    String host = apiBaseUrl;
-    if (Platform.isAndroid) {
-      host = apiBaseUrl.replaceFirst('localhost', '192.168.2.111');
-    }
-
-    final url = Uri.parse('$host/currencies');
+    final url = Uri.parse('$apiBaseUrl/currencies');
     print('Buscando lista de moedas em $url');
 
     try {
@@ -35,12 +28,8 @@ class ConversionRepository {
     required String to,
     required String amount,
   }) async {
-    String host = apiBaseUrl;
-    if (Platform.isAndroid) {
-      host = apiBaseUrl.replaceFirst('localhost', '192.168.2.111');
-    }
-
-    final url = Uri.parse('$host/convert?from=$from&to=$to&amount=$amount');
+    final url =
+        Uri.parse('$apiBaseUrl/convert?from=$from&to=$to&amount=$amount');
     print('Fazendo requisição para a API real em: $url');
 
     try {

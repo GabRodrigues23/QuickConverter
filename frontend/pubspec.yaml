@@ -14,6 +14,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   provider: ^6.1.5+1
   http: ^1.5.0
+  flutter_dotenv: ^6.0.0
 
 dev_dependencies:
   flutter_test:
@@ -30,6 +31,7 @@ flutter_icons:
 # The following section is specific to Flutter packages.
 flutter:
   assets:
+    - .env
     - assets/icon/quickconverter_icon.ico
   
   uses-material-design: true
