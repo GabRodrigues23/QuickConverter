@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'data/repository/conversion_repository.dart';
 import 'ui/viewmodel/converter_viewmodel.dart';
 import 'ui/view/converter_page.dart';
+import 'core/constants.dart';
 
 class QuickConverterApp extends StatelessWidget {
   const QuickConverterApp({super.key});
@@ -16,7 +17,7 @@ class QuickConverterApp extends StatelessWidget {
         title: 'Quick Converter',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
+          colorScheme: ColorScheme.fromSeed(seedColor: primaryColor),
           useMaterial3: true,
         ),
         home: const ConverterPage(),

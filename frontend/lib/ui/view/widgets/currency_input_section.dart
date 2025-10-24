@@ -1,3 +1,4 @@
+import 'package:QuickConverter/core/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -30,13 +31,13 @@ class CurrencyInputSection extends StatelessWidget {
       children: [
         Text(
           label,
-          style: const TextStyle(color: Colors.white, fontSize: 18),
+          style: const TextStyle(color: labelColor, fontSize: 18),
         ),
         const SizedBox(height: 10),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: dropdownBGColor,
             borderRadius: BorderRadius.circular(8),
           ),
           child: DropdownButtonHideUnderline(
@@ -44,12 +45,12 @@ class CurrencyInputSection extends StatelessWidget {
               value: selectedCurrency,
               isExpanded: true,
               hint: const Text('Selecione uma Cotação',
-                  style: TextStyle(color: Colors.grey)),
+                  style: TextStyle(color: selectCurrencyColor)),
               items: currencies.map((String currency) {
                 return DropdownMenuItem<String>(
                   value: currency,
-                  child: Text(currency,
-                      style: const TextStyle(color: Colors.black)),
+                  child:
+                      Text(currency, style: const TextStyle(color: textColor)),
                 );
               }).toList(),
               onChanged: onCurrencyChanged,
@@ -60,16 +61,19 @@ class CurrencyInputSection extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           decoration: BoxDecoration(
-            color: isReadOnly ? Colors.grey[200] : Colors.white,
-            borderRadius: BorderRadius.circular(8),
-          ),
+              color: isReadOnly ? readOnlyDropdownBGColor : dropdownBGColor,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                  color: isReadOnly
+                      ? readOnlyDropdownBorderColor
+                      : dropdownBGColor)),
           child: Row(
             children: [
               SizedBox(
                 width: 30,
                 child: Text(
                   currencySymbols[selectedCurrency] ?? '',
-                  style: const TextStyle(color: Colors.black54, fontSize: 18),
+                  style: const TextStyle(color: symbolColor, fontSize: 18),
                 ),
               ),
               Expanded(
@@ -79,7 +83,7 @@ class CurrencyInputSection extends StatelessWidget {
                   readOnly: isReadOnly,
                   keyboardType:
                       const TextInputType.numberWithOptions(decimal: true),
-                  style: const TextStyle(color: Colors.black, fontSize: 18),
+                  style: const TextStyle(color: textColor, fontSize: 18),
                   decoration: const InputDecoration(
                     border: InputBorder.none,
                     isDense: false,

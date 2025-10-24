@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core/constants.dart';
 import '../viewmodel/converter_viewmodel.dart';
 import 'widgets/currency_input_section.dart';
 
@@ -60,7 +61,7 @@ class _ConverterPageState extends State<ConverterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF4A90E2),
+      backgroundColor: primaryColor,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -71,12 +72,13 @@ class _ConverterPageState extends State<ConverterPage> {
                 builder: (context, viewModel, child) {
                   if (viewModel.isCurrenciesLoading) {
                     return const Center(
-                        child: CircularProgressIndicator(color: Colors.white));
+                        child: CircularProgressIndicator(
+                            color: progressIndicatorColor));
                   }
                   if (viewModel.currenciesError != null) {
                     return Center(
                       child: Text(viewModel.currenciesError!,
-                          style: const TextStyle(color: Colors.redAccent)),
+                          style: const TextStyle(color: errorText)),
                     );
                   }
                   return _buildConverterForm(viewModel);
@@ -115,13 +117,11 @@ class _ConverterPageState extends State<ConverterPage> {
         const Text('QUICKCONVERTER',
             textAlign: TextAlign.center,
             style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                color: Colors.white)),
+                fontSize: 28, fontWeight: FontWeight.bold, color: titleColor)),
         const SizedBox(height: 8),
         const Text('Simple Money Converter',
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 16, color: Colors.white70)),
+            style: TextStyle(fontSize: 16, color: subTitleColor)),
         const SizedBox(height: 40),
         Column(
           children: [
@@ -143,7 +143,7 @@ class _ConverterPageState extends State<ConverterPage> {
             ),
             const SizedBox(height: 15),
             IconButton(
-              icon: const Icon(Icons.swap_vert, color: Colors.white, size: 35),
+              icon: const Icon(Icons.swap_vert, color: iconColor, size: 35),
               onPressed: _swapCurrencies,
             ),
             const SizedBox(height: 15),
@@ -166,7 +166,6 @@ class _ConverterPageState extends State<ConverterPage> {
           ],
         ),
         const SizedBox(height: 30),
-
         ElevatedButton(
           onPressed: viewModel.isLoading
               ? null
@@ -189,8 +188,8 @@ class _ConverterPageState extends State<ConverterPage> {
                 },
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.symmetric(vertical: 16),
-            backgroundColor: Colors.black54,
-            disabledBackgroundColor: Colors.grey.shade700,
+            backgroundColor: activeButtonColor,
+            disabledBackgroundColor: inactiveButtonColor,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),
@@ -199,18 +198,17 @@ class _ConverterPageState extends State<ConverterPage> {
                   height: 24,
                   width: 24,
                   child: CircularProgressIndicator(
-                      strokeWidth: 3, color: Colors.white))
+                      strokeWidth: 3, color: progressIndicatorColor))
               : const Text('Converter',
-                  style: TextStyle(fontSize: 18, color: Colors.white)),
+                  style: TextStyle(fontSize: 18, color: buttonTextColor)),
         ),
         const SizedBox(height: 20),
-
         if (viewModel.errorMessage != null)
           Text(
             viewModel.errorMessage!,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-                color: Colors.redAccent, fontWeight: FontWeight.bold),
+            style:
+                const TextStyle(color: errorText, fontWeight: FontWeight.bold),
           ),
       ],
     );
