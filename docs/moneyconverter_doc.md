@@ -64,6 +64,31 @@ Usuário → Flutter (View) → ViewModel → Repository → Lazarus API → Awe
 | `JsonObj` | TJSONObject | Objeto JSON específico do par de moedas. |
 | `fs` | TFormatSettings | Record que força o **ponto (`.`)** como separador decimal para compatibilidade. |
 
+### 3.4. Mecanismo de Cache
+
+Para otimizar o desempenho e evitar exceder os limites de requisição da AwesomeAPI (erro HTTP 429 - Too Many Requests), o backend implementa um mecanismo de cache em memória para as cotações de moeda.
+
+**Localização:** A lógica de cache está implementada na unidade `serviceapi.pas`.
+
+**Funcionamento:**
+
+1.  **Estrutura de Dados:** Utiliza-se um `TDictionary<string, TCachedRate>` (`RateCache`) para armazenar as cotações.
+    * A **chave** do dicionário é uma string concatenada dos códigos das moedas (ex: `"USDBRL"`).
+    * O **valor** é um `record` (`TCachedRate`) que contém a cotação (`Rate: Double`) e o momento em que ela foi obtida (`Timestamp: TDateTime`).
+2.  **Fluxo de Requisição:** Quando a função `ConvertCurrency` é chamada:
+    * O cache é consultado usando a chave da moeda (ex: `"USDBRL"`).
+    * **Cache Hit:** Se a cotação existe no cache e seu `Timestamp` é recente (dentro do limite `CACHE_EXPIRATION_SECONDS`, atualmente **60 segundos**), o valor cacheado é usado diretamente, e a chamada para a AwesomeAPI **não é realizada**.
+    * **Cache Miss ou Expirado:** Se a cotação não existe ou está expirada, a função prossegue para buscar o valor na AwesomeAPI.
+3.  **Atualização do Cache:** Após obter uma nova cotação da AwesomeAPI, ela é armazenada (ou atualizada) no `RateCache` com o `Timestamp` atual, substituindo qualquer valor antigo para aquele par de moedas.
+4.  **Gerenciamento de Concorrência:** Um `TCriticalSection` (`CacheLock`) é utilizado para garantir que o acesso e a modificação do `RateCache` sejam seguros em caso de múltiplas requisições simultâneas, evitando condições de corrida.
+5.  **Ciclo de Vida:** O dicionário `RateCache` e o `CacheLock` são criados na seção `initialization` da unit `serviceapi` e liberados na seção `finalization`, garantindo o gerenciamento correto da memória.
+
+**Benefícios:**
+
+* Reduz drasticamente o número de chamadas para a API externa.
+* Melhora significativamente o tempo de resposta para requisições repetidas dentro da janela de validade do cache.
+* Previne bloqueios por excesso de requisições (Rate Limiting).
+
 ---
 
 ## 📱 4. Frontend — Flutter
@@ -190,24 +215,15 @@ Esta seção descreve os endpoints fornecidos pelo nosso próprio backend Lazaru
 
 -   **Adicionar funcionalidade de temas:** Para tornar a aplicação mais customizavel.
 -   **Adicionar histórico de conversões:** Para manter um registro das operações do usuário.
--   **Implementar cache no backend:** Para diminuir a dependência da AwesomeAPI e otimizar a performance, evitando erros de "Too Many Requests" (HTTP 429).
 -   **Notificações em tempo real:** Para manter o usuário informado sobre variações de cotação.
 
 ---
 
-## 👤 11. Autor
-
-**Gabriel Rodrigues de Oliveira**
-
-*Desenvolvedor Full Stack (Lazarus + Flutter)*
-
----
-
-## 🔩 12. Implantação (Deployment) na AWS
+## 🔩 13. Implantação (Deployment) na AWS
 
 *Esta seção detalha o processo de implantação do backend Lazarus em uma instância EC2.*
 
-### 12.1. Configuração da Instância EC2
+### 11.1. Configuração da Instância EC2
 ---
 
 | Parâmetro | Valor Escolhido | Observação |
@@ -216,7 +232,7 @@ Esta seção descreve os endpoints fornecidos pelo nosso próprio backend Lazaru
 | **AMI (Sistema)** | Windows Server 2019 Base | Escolhido por ser elegível ao Free Tier e pela compatibilidade direta com o binário `.exe`. |
 | **Tipo da Instância** | `t3.micro` | Incluído no Free Tier da AWS, suficiente para a carga da aplicação. |
 
-### 12.2. Configuração de Rede e Segurança (Security Group)
+### 11.2. Configuração de Rede e Segurança (Security Group)
 
 Foram criadas as seguintes regras de entrada (Inbound Rules) para a instância:
 
@@ -227,7 +243,7 @@ Foram criadas as seguintes regras de entrada (Inbound Rules) para a instância:
 
 🚨 **Aviso de Segurança:** A porta RDP (3389) **nunca** deve ser exposta a `0.0.0.0/0` (qualquer IP). O acesso deve ser restrito ao IP do administrador para evitar ataques de força bruta.
 
-### 12.3. Processo de Deploy
+### 11.3. Processo de Deploy
 
 1.  **Conexão Remota:** A conexão com o servidor foi estabelecida via **Área de Trabalho Remota (RDP)**, utilizando o IP público e as credenciais fornecidas pela AWS (descriptografadas com a chave `.pem`).
 2.  **Transferência de Arquivos:** O diretório `C:\QuickConverter-Server\` foi criado na instância. Os seguintes arquivos foram transferidos do ambiente de desenvolvimento para este diretório:
@@ -240,9 +256,17 @@ Foram criadas as seguintes regras de entrada (Inbound Rules) para a instância:
     backend.exe
     ```
 
-### 12.4. Próximos Passos (Robustez)
+### 11.4. Próximos Passos (Robustez)
 
 -   **Execução como Serviço:** Para garantir que a API reinicie automaticamente com o servidor e continue rodando em segundo plano, o próximo passo é configurar o `backend.exe` para ser executado como um **Serviço do Windows**.
 -   **HTTPS:** Implementar um certificado SSL/TLS (ex: via Let's Encrypt ou AWS Certificate Manager) para que a comunicação entre o app e a API seja criptografada (`https://...`).
 
 🚨 **Gerenciamento de Segredos:** A senha de administrador do servidor foi gerada pela AWS e deve ser armazenada em um local seguro (gerenciador de senhas). **NUNCA** deve ser inserida em texto puro em documentações ou versionada em repositórios Git.
+
+---
+
+## 👤 12. Autor
+
+**Gabriel Rodrigues de Oliveira**
+
+*Desenvolvedor Full Stack (Lazarus + Flutter)*

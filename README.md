@@ -1,12 +1,16 @@
 # 🚀 QuickConverter
 
-<div align="center"><img src="https://i.imgur.com/SXrzs90.png" alt="QuickConverter Screenshot" width="300"/></div>
+<div align="center"><img src="https://i.imgur.com/SXrzs90.png" alt="QuickConverter Screenshot" width="300"/>
 
 ![Lazarus](https://img.shields.io/badge/Lazarus-Pascal-blue?style=for-the-badge&logo=delphi)
 ![Flutter](https://img.shields.io/badge/Flutter-Dart-02569B?style=for-the-badge&logo=flutter)
 ![AWS](https://img.shields.io/badge/AWS-EC2-FF9900?style=for-the-badge&logo=amazon-aws)
 
+
+
 Um conversor de moedas simples, porém robusto, construído com uma stack full stack moderna, utilizando Lazarus (Free Pascal) para o backend e Flutter para o frontend. O projeto foi totalmente implantado na AWS, demonstrando um ciclo de vida completo de desenvolvimento e deploy.
+
+</div>
 
 ---
 
