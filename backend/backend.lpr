@@ -10,6 +10,6 @@ uses
   opensslsockets;
 
 begin
-  WriteLn('QuickConverter API iniciando...');
+  WriteLn('QuickConverter API Server Iniciado...');
   THorse.Listen(9000);
 end.
