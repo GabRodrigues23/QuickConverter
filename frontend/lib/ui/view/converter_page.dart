@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../core/constants.dart';
+import 'package:QuickConverter/core/notifiers/theme_notifier.dart';
+import 'package:QuickConverter/core/theme/app_themes.dart';
+
 import '../viewmodel/converter_viewmodel.dart';
 import 'widgets/currency_input_section.dart';
 
@@ -60,8 +62,86 @@ class _ConverterPageState extends State<ConverterPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Scaffold(
-      backgroundColor: primaryColor,
+      backgroundColor: theme.scaffoldBackgroundColor,
+      appBar: AppBar(
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+              icon: const Icon(Icons.menu),
+            );
+          },
+        ),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.palette_rounded),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('Theme Selector'),
+                  content: Consumer<ThemeNotifier>(
+                    builder: (context, notifier, child) {
+                      return Wrap(
+                        spacing: 10.0,
+                        runSpacing: 10.0,
+                        alignment: WrapAlignment.center,
+                        children: AppThemeType.values.map((themeType) {
+                          final themeData = AppThemes.getTheme(themeType);
+                          final primaryColor =
+                              themeData.colorScheme.primaryContainer;
+                          final isSelected = notifier.currentTheme == themeType;
+                          return GestureDetector(
+                            onTap: () {
+                              notifier.setTheme(themeType);
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              width: 50,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                color: primaryColor,
+                                borderRadius: BorderRadius.circular(8),
+                                border: isSelected
+                                    ? Border.all(
+                                        color: colorScheme.primary, width: 3.0)
+                                    : Border.all(width: 1.0),
+                              ),
+                              child: isSelected
+                                  ? Icon(
+                                      Icons.check,
+                                      color: themeData.colorScheme.primary,
+                                      size: 24,
+                                    )
+                                  : null,
+                            ),
+                          );
+                        }).toList(),
+                      );
+                    },
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text(
+                        'Close',
+                        style:
+                            TextStyle(color: theme.textTheme.titleSmall?.color),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          )
+        ],
+      ),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -71,14 +151,15 @@ class _ConverterPageState extends State<ConverterPage> {
               child: Consumer<ConverterViewModel>(
                 builder: (context, viewModel, child) {
                   if (viewModel.isCurrenciesLoading) {
-                    return const Center(
+                    return Center(
                         child: CircularProgressIndicator(
-                            color: progressIndicatorColor));
+                            color: theme.iconTheme.color));
                   }
                   if (viewModel.currenciesError != null) {
                     return Center(
                       child: Text(viewModel.currenciesError!,
-                          style: const TextStyle(color: errorText)),
+                          style: TextStyle(
+                              color: theme.textTheme.labelSmall?.color)),
                     );
                   }
                   return _buildConverterForm(viewModel);
@@ -92,6 +173,9 @@ class _ConverterPageState extends State<ConverterPage> {
   }
 
   Widget _buildConverterForm(ConverterViewModel viewModel) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     if (_fromCurrency == null && viewModel.currencies.isNotEmpty) {
       _fromCurrency = viewModel.currencies.contains('USD')
           ? 'USD'
@@ -114,14 +198,11 @@ class _ConverterPageState extends State<ConverterPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const Text('QUICKCONVERTER',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                fontSize: 28, fontWeight: FontWeight.bold, color: titleColor)),
+        Text('QUICKCONVERTER',
+            textAlign: TextAlign.center, style: theme.textTheme.displayLarge),
         const SizedBox(height: 8),
-        const Text('Simple Money Converter',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 16, color: subTitleColor)),
+        Text('Simple Money Converter',
+            textAlign: TextAlign.center, style: theme.textTheme.titleMedium),
         const SizedBox(height: 40),
         Column(
           children: [
@@ -143,7 +224,7 @@ class _ConverterPageState extends State<ConverterPage> {
             ),
             const SizedBox(height: 15),
             IconButton(
-              icon: const Icon(Icons.swap_vert, color: iconColor, size: 35),
+              icon: Icon(Icons.swap_vert, size: 35),
               onPressed: _swapCurrencies,
             ),
             const SizedBox(height: 15),
@@ -186,29 +267,20 @@ class _ConverterPageState extends State<ConverterPage> {
                     }
                   }
                 },
-          style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            backgroundColor: activeButtonColor,
-            disabledBackgroundColor: inactiveButtonColor,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          ),
           child: viewModel.isLoading
-              ? const SizedBox(
+              ? SizedBox(
                   height: 24,
                   width: 24,
                   child: CircularProgressIndicator(
-                      strokeWidth: 3, color: progressIndicatorColor))
-              : const Text('Converter',
-                  style: TextStyle(fontSize: 18, color: buttonTextColor)),
+                      strokeWidth: 3, color: theme.iconTheme.color))
+              : const Text('Converter'),
         ),
         const SizedBox(height: 20),
         if (viewModel.errorMessage != null)
           Text(
             viewModel.errorMessage!,
             textAlign: TextAlign.center,
-            style:
-                const TextStyle(color: errorText, fontWeight: FontWeight.bold),
+            style: TextStyle(color: theme.textTheme.bodySmall?.color),
           ),
       ],
     );
