@@ -14,7 +14,7 @@ class AppThemes {
       iconColor: const Color(0xFFFFFFFF),
       menuHeaderColor: const Color(0xFF121B2A),
       menuItemColor: const Color(0xFF3D5B8B),
-      menuBackground: const Color(0xFF3D5B8B),
+      menuBackground: const Color(0xFF588ADB),
       buttonActiveColor: const Color(0x89000000),
       buttonInactiveColor: const Color(0xFF616161),
       buttonTextColor: const Color(0xFFFFFFFF),
@@ -30,7 +30,7 @@ class AppThemes {
       appBarColor: const Color.fromARGB(255, 141, 22, 22),
       menuHeaderColor: const Color(0xFF2A1212),
       menuItemColor: const Color(0xFF5B3D3D),
-      menuBackground: const Color(0xFF5B3D3D),
+      menuBackground: const Color(0xFFA12525),
       buttonActiveColor: const Color(0x89000000),
       buttonInactiveColor: const Color(0xFF616161),
       buttonTextColor: const Color(0xFFFFFFFF),
@@ -46,7 +46,7 @@ class AppThemes {
       appBarColor: const Color(0xFFFFA000),
       menuHeaderColor: const Color(0xFF2A2012),
       menuItemColor: const Color(0xFF5B493D),
-      menuBackground: const Color(0xFF5B493D),
+      menuBackground: const Color(0xFFDD8D58),
       buttonActiveColor: const Color(0x89000000),
       buttonInactiveColor: const Color(0xFF616161),
       buttonTextColor: const Color(0xFFFFFFFF),
@@ -62,7 +62,7 @@ class AppThemes {
       iconColor: const Color(0xFFFFFFFF),
       menuHeaderColor: const Color(0xFF122A13),
       menuItemColor: const Color(0xFF3D5B3E),
-      menuBackground: const Color(0xFF3D5B3E),
+      menuBackground: const Color(0xFF62B565),
       buttonActiveColor: const Color(0x89000000),
       buttonInactiveColor: const Color(0xFF616161),
       buttonTextColor: const Color(0xFFFFFFFF),
@@ -99,6 +99,24 @@ class AppThemes {
         iconTheme: IconThemeData(color: iconColor),
         centerTitle: true,
       ),
+      drawerTheme: DrawerThemeData(backgroundColor: menuBackground),
+      secondaryHeaderColor: menuHeaderColor,
+      listTileTheme: ListTileThemeData(
+        tileColor: menuBackground,
+        iconColor: iconColor,
+        textColor: textColor,
+      ),
+      iconTheme: IconThemeData(color: iconColor),
+      textTheme: TextTheme(
+        displayLarge: TextStyle(
+            fontSize: 28, fontWeight: FontWeight.bold, color: titleColor),
+        displayMedium: TextStyle(
+            fontSize: 20, fontWeight: FontWeight.bold, color: subTitleColor),
+        displaySmall: TextStyle(color: titleColor),
+        bodySmall: TextStyle(fontSize: 14, color: errorText),
+        labelMedium: TextStyle(fontSize: 12, color: textColor),
+        labelLarge: TextStyle(fontSize: 16, color: textColor),
+      ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: buttonActiveColor,
@@ -109,15 +127,6 @@ class AppThemes {
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
       ),
-      textTheme: TextTheme(
-        displayLarge: TextStyle(
-            fontSize: 28, fontWeight: FontWeight.bold, color: titleColor),
-        displayMedium: TextStyle(fontSize: 20, color: subTitleColor),
-        titleSmall: TextStyle(fontSize: 12, color: textColor),
-        bodySmall: TextStyle(fontSize: 14, color: errorText),
-      ),
-      iconTheme: IconThemeData(color: iconColor),
-      drawerTheme: DrawerThemeData(backgroundColor: menuBackground),
       useMaterial3: true,
     );
   }
