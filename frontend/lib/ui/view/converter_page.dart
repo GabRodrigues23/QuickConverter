@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:QuickConverter/core/notifiers/theme_notifier.dart';
 import 'package:QuickConverter/core/theme/app_themes.dart';
 
-import '../viewmodel/converter_viewmodel.dart';
-import 'widgets/currency_input_section.dart';
+import 'package:QuickConverter/core/notifiers/theme_notifier.dart';
+
+import 'package:QuickConverter/ui/view/widgets/side_bar_widget.dart';
+import 'package:QuickConverter/ui/view/widgets/currency_input_section.dart';
+
+import 'package:QuickConverter/ui/viewmodel/converter_viewmodel.dart';
 
 class ConverterPage extends StatefulWidget {
   const ConverterPage({super.key});
@@ -67,6 +70,7 @@ class _ConverterPageState extends State<ConverterPage> {
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
+      drawer: const SidebarWidget(),
       appBar: AppBar(
         leading: Builder(
           builder: (context) {
@@ -174,7 +178,6 @@ class _ConverterPageState extends State<ConverterPage> {
 
   Widget _buildConverterForm(ConverterViewModel viewModel) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
 
     if (_fromCurrency == null && viewModel.currencies.isNotEmpty) {
       _fromCurrency = viewModel.currencies.contains('USD')
@@ -248,6 +251,7 @@ class _ConverterPageState extends State<ConverterPage> {
         ),
         const SizedBox(height: 30),
         ElevatedButton(
+          style: theme.elevatedButtonTheme.style,
           onPressed: viewModel.isLoading
               ? null
               : () {
