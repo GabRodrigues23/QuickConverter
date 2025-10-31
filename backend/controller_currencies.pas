@@ -24,7 +24,7 @@ begin
 
     Res.ContentType('application/json; charset=UTF-8').Send(JSONArray.AsJSON);
   except
-    Res.Status(500).Send('Erro ao gerar a lista de moedas. Reinicie o aplicativo e tente novamente.');
+    Res.Status(500).Send('Erro ao gerar a lista de moedas.');
   end;
 end;
 

@@ -84,7 +84,7 @@ class CurrencyInputSection extends StatelessWidget {
                   readOnly: isReadOnly,
                   keyboardType:
                       const TextInputType.numberWithOptions(decimal: true),
-                  style: theme.textTheme.labelMedium,
+                  style: theme.textTheme.labelLarge,
                   decoration: const InputDecoration(
                     border: InputBorder.none,
                     isDense: false,
