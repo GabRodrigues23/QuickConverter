@@ -28,9 +28,7 @@ class _ConverterPageState extends State<ConverterPage> {
     'USD': '\$ ',
     'BRL': 'R\$ ',
     'GBP': '£ ',
-    'ARS': '\$ ',
     'EUR': '€ ',
-    'JPY': '¥ ',
   };
 
   @override

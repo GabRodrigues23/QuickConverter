@@ -20,13 +20,11 @@ begin
     JSONArray.Add('USD');
     JSONArray.Add('BRL');
     JSONArray.Add('GBP');
-    JSONArray.Add('ARS');
     JSONArray.Add('EUR');
-    JSONArray.Add('JPY');
 
     Res.ContentType('application/json; charset=UTF-8').Send(JSONArray.AsJSON);
   except
-    Res.Status(500).Send('Erro ao gerar a lista de moedas.');
+    Res.Status(500).Send('Erro ao gerar a lista de moedas. Reinicie o aplicativo e tente novamente.');
   end;
 end;
 
