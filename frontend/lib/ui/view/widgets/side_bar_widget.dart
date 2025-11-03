@@ -45,7 +45,23 @@ class SidebarWidget extends StatelessWidget {
             tileColor: theme.listTileTheme.tileColor,
             onTap: () {
               menuNotifier.updateMenuIndex(1);
-              Navigator.pop(context);
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('Aviso'),
+                    content: Text('Conteúdo em Desenvolvimento!'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text('Fechar'),
+                      ),
+                    ],
+                  );
+                },
+              );
             },
           ),
           ListTile(
@@ -56,7 +72,23 @@ class SidebarWidget extends StatelessWidget {
             tileColor: theme.listTileTheme.tileColor,
             onTap: () {
               menuNotifier.updateMenuIndex(2);
-              Navigator.pop(context);
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('Aviso'),
+                    content: Text('Conteúdo em Desenvolvimento!'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text('Fechar'),
+                      ),
+                    ],
+                  );
+                },
+              );
             },
           ),
         ],
