@@ -57,10 +57,10 @@ A lógica de conversão é dividida em duas funções principais para maior clar
 
 | Variável | Tipo | Função |
 | :--- | :--- | :--- |
-| `Url` | String | URL da requisição para a AwesomeAPI, usando o endpoint `/json/all/` para suportar todas as moedas. |
+| `Url` | String | URL da requisição para a AwesomeAPI, usando o endpoint `/json/last/` para suportar todas as moedas. |
 | `ApiPair_ForURL`| String | O par de moedas enviado na URL (ex: "USD-BRL"). |
 | `CacheKey_ForJSON`| String | A chave usada para o cache (ex: "USDBRL"). |
-| `JsonParsingKey`| String | A chave correta para o parse do JSON retornado pelo endpoint `/all/` (ex: "USD"). |
+| `JsonParsingKey`| String | A chave correta para o parse do JSON retornado pelo endpoint `/last/` (ex: "USD"). |
 | `IsInverse` | Boolean | Flag que indica se a função `GetRate` deve retornar `1 / Rate` (ex: para `BRL-USD`). |
 | `RateCache` | `TDictionary` | Dicionário em memória que armazena as `TCachedRate`. |
 | `fs` | `TFormatSettings`| Record que força o **ponto (`.`)** como separador decimal para compatibilidade. |
@@ -151,7 +151,7 @@ API_URL=http://localhost:9000
 
 **Exemplo de `.env` para produção:**
 ```
-API_URL=[http://3.135.228.217:9000](http://3.135.228.217:9000)
+API_URL=http://192.168.2.100:9000
 ```
 
 ---
@@ -160,28 +160,20 @@ API_URL=[http://3.135.228.217:9000](http://3.135.228.217:9000)
 
 ### 5.1. Endpoint Utilizado pelo Backend
 
-Para garantir o suporte a todas as moedas e otimizar as chamadas, o backend utiliza o endpoint `/all/` da AwesomeAPI, que permite a busca de múltiplos pares em uma única requisição.
+O backend utiliza o endpoint `/last/`, que fornece as cotações mais recentes para os principais pares de moedas em relação ao Real (BRL).
 
-`GET https://economia.awesomeapi.com.br/json/all/USD-BRL,EUR-BRL,JPY-BRL`
+`GET https://economia.awesomeapi.com.br/json/last/USD-BRL`
 
 ### 5.2. Exemplo de Resposta Recebida
 
-O endpoint `/all/` retorna um JSON onde cada chave é o código da **moeda de origem** (ex: "USD"), e não o par concatenado.
+O endpoint `/last/` retorna um JSON onde a chave é o par concatenado.
 
 ```json
 {
-  "USD": {
+  "USDBRL": {
     "code": "USD",
     "codein": "BRL",
-    "name": "Dólar Americano/Real Brasileiro",
     "bid": "5.4000",
-    ...
-  },
-  "JPY": {
-    "code": "JPY",
-    "codein": "BRL",
-    "name": "Iene Japonês/Real Brasileiro",
-    "bid": "0.035",
     ...
   }
 }
@@ -189,7 +181,7 @@ O endpoint `/all/` retorna um JSON onde cada chave é o código da **moeda de or
 
 ### 5.3. Tratamento de Resposta
 
--   O backend armazena o `bid` de cada par (ex: `USD-BRL`, `JPY-BRL`) em seu cache.
+-   O backend armazena o `bid` de cada par (ex: `USD-BRL`, `EUR-BRL`) em seu cache.
 -   A lógica de conversão cruzada é então aplicada para calcular a taxa final.
 
 ---
@@ -226,12 +218,12 @@ O fluxo, executado dentro da função `ConvertCurrency` (o "Gerente"), é o segu
     * `FinalRate` = `1 / Rate(USD-BRL)`.
     * Custo: 1 chamada de `GetRate`.
 
-4.  **Caso 3: Conversão Cruzada (ex: `EUR -> JPY`)**
+4.  **Caso 3: Conversão Cruzada (ex: `EUR -> USD`)**
     * O backend identifica que BRL não está envolvido e executa a lógica BRL-bridge.
-    * **Passo 3a:** Chama `GetRate(EUR, BRL)` para obter `Rate_EUR_BRL`.
-    * **Passo 3b:** Chama `GetRate(JPY, BRL)` para obter `Rate_JPY_BRL`.
-    * **Passo 3c:** Calcula a taxa final:
-      **Fórmula:** `FinalRate = Rate_EUR_BRL / Rate_JPY_BRL`
+    * **Passo 3.1:** Chama `GetRate(EUR, BRL)` para obter `Rate_EUR_BRL`.
+    * **Passo 3.2:** Chama `GetRate(USD, BRL)` para obter `Rate_USD_BRL`.
+    * **Passo 3.3:** Calcula a taxa final:
+      **Fórmula:** `FinalRate = Rate_EUR_BRL / Rate_USD_BRL`
     * Custo: 2 chamadas de `GetRate` (que são otimizadas pela lógica de "chamada em lote" e pelo cache).
 
 O `Amount` do usuário é então multiplicado pela `FinalRate` calculada.
