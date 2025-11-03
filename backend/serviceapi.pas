@@ -153,7 +153,7 @@ begin
     begin
       WriteLn('[LOGIC] Caso 3: Conversao cruzada (', FromCur, ' -> ', ToCur, ')');
       Rate_From_To_BRL := GetRate(FromCur, 'BRL');
-      Rate_To_To_BRL := GetRate('BRL', ToCur);
+      Rate_To_To_BRL := GetRate(ToCur, 'BRL');
 
       if Rate_To_To_BRL = 0 then
       begin
