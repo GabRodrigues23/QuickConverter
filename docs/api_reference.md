@@ -48,9 +48,7 @@ Retorna uma lista com os códigos das moedas suportadas pela aplicação. Este e
           "USD",
           "BRL",
           "GBP",
-          "ARS",
-          "EUR",
-          "JPY"
+          "EUR"
         ]
         ```
 * **Resposta de Erro (`500 Internal Server Error`)**
@@ -60,33 +58,47 @@ Retorna uma lista com os códigos das moedas suportadas pela aplicação. Este e
 
 ### `GET /convert`
 
-Realiza a conversão de um valor entre duas moedas especificadas, utilizando a cotação mais recente.
+Realiza a conversão de um valor entre **quaisquer** duas moedas suportadas. O backend lida automaticamente com conversões diretas (`USD -> BRL`), inversas (`BRL -> USD`) e cruzadas (`EUR -> JPY`) usando o BRL como moeda-ponte.
 
 * **Parâmetros (Query)**
 
 | Parâmetro | Tipo | Obrigatório | Descrição | Exemplo |
 | :--- | :--- | :--- | :--- | :--- |
 | `from` | `string` | Sim | Código da moeda de origem (padrão ISO 4217). | `USD` |
-| `to` | `string` | Sim | Código da moeda de destino (padrão ISO 4217). | `BRL` |
+| `to` | `string` | Sim | Código da moeda de destino (padrão ISO 4217). | `JPY` |
 | `amount` | `string` | Sim | O valor a ser convertido. Deve usar **ponto (`.`)** como separador decimal. | `150.50` |
 
-* **Exemplo de Requisição Completa**
+* **Exemplo de Requisição Completa (Conversão Cruzada)**
     ```
-    GET http://localhost:9000/convert?from=USD&to=BRL&amount=100
+    GET http://localhost:9000/convert?from=EUR&to=JPY&amount=100
     ```
+
 * **Exemplo de Resposta de Sucesso (`200 OK`)**
     * **Content-Type:** `application/json`
     * **Corpo:**
         ```json
         {
           "originalAmount": "100.00",
-          "fromCurrency": "USD",
-          "toCurrency": "BRL",
-          "convertedValue": "548.02"
+          "fromCurrency": "EUR",
+          "toCurrency": "JPY",
+          "convertedValue": "16540.80" 
         }
         ```
+
+* **Comportamento em Caso de Falha de Cotação:**
+    * Se o backend não conseguir obter uma das cotações necessárias da API externa (ex: API fora do ar), ele **não retornará um erro**. Ele capturará a exceção internamente e retornará um `convertedValue` de `0`.
+    * **Corpo da Resposta (Falha de Cotação, `200 OK`):**
+        ```json
+        {
+          "originalAmount": "100.00",
+          "fromCurrency": "EUR",
+          "toCurrency": "JPY",
+          "convertedValue": "0.00"
+        }
+        ```
+
 * **Exemplo de Resposta de Erro (`400 Bad Request`)**
-    * Ocorre se houver um erro nos parâmetros (ex: valor inválido). A API retornará uma mensagem de erro em texto.
+    * Ocorre se houver um erro de **validação de entrada** (ex: valor de `amount` inválido).
     * **Corpo:**
         ```
         Erro: "abc" is an invalid float
