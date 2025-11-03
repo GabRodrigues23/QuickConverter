@@ -20,9 +20,7 @@ begin
     JSONArray.Add('USD');
     JSONArray.Add('BRL');
     JSONArray.Add('GBP');
-    JSONArray.Add('ARS');
     JSONArray.Add('EUR');
-    JSONArray.Add('JPY');
 
     Res.ContentType('application/json; charset=UTF-8').Send(JSONArray.AsJSON);
   except

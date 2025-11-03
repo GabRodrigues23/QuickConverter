@@ -89,6 +89,9 @@
       <Item>
         <Name Value="EConvertError"/>
       </Item>
+      <Item>
+        <Name Value="EHTTPClient"/>
+      </Item>
     </Exceptions>
   </Debugging>
 </CONFIG>

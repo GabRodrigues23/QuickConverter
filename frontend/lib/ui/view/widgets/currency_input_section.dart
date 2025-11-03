@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'package:QuickConverter/core/constants.dart';
+
 class CurrencyInputSection extends StatelessWidget {
   final String label;
   final String? selectedCurrency;
@@ -25,31 +27,32 @@ class CurrencyInputSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
-          style: const TextStyle(color: Colors.white, fontSize: 18),
+          style: theme.textTheme.labelMedium,
         ),
         const SizedBox(height: 10),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: labelColor,
             borderRadius: BorderRadius.circular(8),
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
               value: selectedCurrency,
               isExpanded: true,
-              hint: const Text('Selecione uma Cotação',
-                  style: TextStyle(color: Colors.grey)),
+              hint: Text('Selecione uma Cotação',
+                  style: theme.textTheme.labelMedium),
               items: currencies.map((String currency) {
                 return DropdownMenuItem<String>(
                   value: currency,
-                  child: Text(currency,
-                      style: const TextStyle(color: Colors.black)),
+                  child: Text(currency, style: theme.textTheme.labelLarge),
                 );
               }).toList(),
               onChanged: onCurrencyChanged,
@@ -60,16 +63,18 @@ class CurrencyInputSection extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           decoration: BoxDecoration(
-            color: isReadOnly ? Colors.grey[200] : Colors.white,
-            borderRadius: BorderRadius.circular(8),
-          ),
+              color: isReadOnly ? readOnlyDropdownBGColor : dropdownBGColor,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: isReadOnly ? readOnlyDropdownBGColor : dropdownBGColor,
+              )),
           child: Row(
             children: [
               SizedBox(
                 width: 30,
                 child: Text(
                   currencySymbols[selectedCurrency] ?? '',
-                  style: const TextStyle(color: Colors.black54, fontSize: 18),
+                  style: TextStyle(color: symbolColor, fontSize: 18),
                 ),
               ),
               Expanded(
@@ -79,7 +84,7 @@ class CurrencyInputSection extends StatelessWidget {
                   readOnly: isReadOnly,
                   keyboardType:
                       const TextInputType.numberWithOptions(decimal: true),
-                  style: const TextStyle(color: Colors.black, fontSize: 18),
+                  style: theme.textTheme.labelLarge,
                   decoration: const InputDecoration(
                     border: InputBorder.none,
                     isDense: false,
