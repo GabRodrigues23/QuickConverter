@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:quick_converter/core/notifiers/menu_notifier.dart';
+import 'package:quick_converter/ui/history/view/history_modal.dart';
 
 class SidebarWidget extends StatelessWidget {
   const SidebarWidget({super.key});
@@ -55,22 +56,12 @@ class SidebarWidget extends StatelessWidget {
             iconColor: theme.listTileTheme.iconColor ?? theme.iconTheme.color,
             tileColor: theme.listTileTheme.tileColor,
             onTap: () {
-              showDialog(
+              Navigator.pop(context);
+              showModalBottomSheet(
                 context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text('Aviso'),
-                    content: Text('Conteúdo em Desenvolvimento!'),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: Text('Fechar'),
-                      ),
-                    ],
-                  );
-                },
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                builder: (context) => const HistoryModal(),
               );
             },
           ),

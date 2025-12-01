@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 enum ActivePage {
   currency, // Conversor de Moedas
   crypto, // Criptomoedas
-  history // Histórico
 }
 
 class MenuNotifier extends ChangeNotifier {
@@ -17,8 +16,6 @@ class MenuNotifier extends ChangeNotifier {
         return 'Conversor de Moedas';
       case ActivePage.crypto:
         return 'Conversor de Criptomoedas';
-      case ActivePage.history:
-        return 'Histórico';
     }
   }
 

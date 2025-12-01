@@ -55,8 +55,6 @@ class MainPage extends StatelessWidget {
         return const ConverterPage();
       case ActivePage.crypto:
         return const CryptoPage();
-      case ActivePage.history:
-        return const Center(child: Text("Histórico em construção"));
     }
   }
 
