@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:QuickConverter/core/notifiers/menu_notifier.dart';
+import 'package:quick_converter/core/notifiers/menu_notifier.dart';
 
 class SidebarWidget extends StatelessWidget {
   const SidebarWidget({super.key});

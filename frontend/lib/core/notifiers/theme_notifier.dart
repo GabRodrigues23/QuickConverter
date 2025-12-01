@@ -1,4 +1,4 @@
-import 'package:QuickConverter/core/theme/app_themes.dart';
+import 'package:quick_converter/core/theme/app_themes.dart';
 import 'package:flutter/material.dart';
 
 class ThemeNotifier extends ChangeNotifier {

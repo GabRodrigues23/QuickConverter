@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:QuickConverter/core/theme/app_themes.dart';
+import 'package:quick_converter/core/theme/app_themes.dart';
 
-import 'package:QuickConverter/core/notifiers/theme_notifier.dart';
+import 'package:quick_converter/core/notifiers/theme_notifier.dart';
 
-import 'package:QuickConverter/ui/view/widgets/side_bar_widget.dart';
-import 'package:QuickConverter/ui/view/widgets/currency_input_section.dart';
+import 'package:quick_converter/ui/view/widgets/side_bar_widget.dart';
+import 'package:quick_converter/ui/view/widgets/currency_input_section.dart';
 
-import 'package:QuickConverter/ui/viewmodel/converter_viewmodel.dart';
+import 'package:quick_converter/ui/viewmodel/converter_viewmodel.dart';
 
 class ConverterPage extends StatefulWidget {
   const ConverterPage({super.key});
@@ -29,6 +29,9 @@ class _ConverterPageState extends State<ConverterPage> {
     'BRL': 'R\$ ',
     'GBP': '£ ',
     'EUR': '€ ',
+    'ARS': '\$',
+    'JPY': '¥ ',
+    'CHF': '₣ ',
   };
 
   @override

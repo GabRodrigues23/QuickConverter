@@ -1,4 +1,4 @@
-name: QuickConverter
+name: quick_converter
 description: "A Simple Money Converter"
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
