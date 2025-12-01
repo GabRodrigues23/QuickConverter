@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quick_converter/core/notifiers/history_notifier.dart';
+import 'package:quick_converter/data/model/history_item.dart';
 
 import 'package:quick_converter/ui/features/crypto/viewmodel/crypto_viewmodel.dart';
 import 'package:quick_converter/ui/features/currency/view/widgets/currency_input_section.dart';
@@ -42,7 +44,7 @@ class _CryptoPageState extends State<CryptoPage> {
     super.dispose();
   }
 
-  void _onConvert(CryptoViewModel viewModel) {
+  Future<void> _onConvert(CryptoViewModel viewModel) async {
     final text = _amountController.text.replaceAll(',', '.');
     if (text.isEmpty || _selectedCrypto == null) return;
 
@@ -51,10 +53,36 @@ class _CryptoPageState extends State<CryptoPage> {
       _amountController.text = value.toStringAsFixed(2).replaceAll('.', ',');
     }
 
-    viewModel.performCryptoConversion(
+    await viewModel.performCryptoConversion(
       crypto: _selectedCrypto!,
       amount: text,
     );
+
+    if (viewModel.conversionError == null &&
+        viewModel.resultBrl != null &&
+        viewModel.resultUsd != null) {
+      if (mounted) {
+        final historyNotifier =
+            Provider.of<HistoryNotifier>(context, listen: false);
+        final now = DateTime.now();
+
+        historyNotifier.addToHistory(HistoryItem(
+          from: _selectedCrypto!,
+          to: 'BRL',
+          amount: _amountController.text,
+          result: viewModel.resultBrl!.convertedValue.replaceAll('.', ','),
+          date: now,
+        ));
+
+        historyNotifier.addToHistory(HistoryItem(
+          from: _selectedCrypto!,
+          to: 'USD',
+          amount: _amountController.text,
+          result: viewModel.resultUsd!.convertedValue.replaceAll('.', ','),
+          date: now,
+        ));
+      }
+    }
   }
 
   @override
@@ -92,11 +120,6 @@ class _CryptoPageState extends State<CryptoPage> {
             ),
             const SizedBox(height: 30),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
-              ),
               onPressed:
                   viewModel.isConverting ? null : () => _onConvert(viewModel),
               child: viewModel.isConverting

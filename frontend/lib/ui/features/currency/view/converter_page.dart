@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quick_converter/core/notifiers/history_notifier.dart';
+import 'package:quick_converter/data/model/history_item.dart';
 
 import 'package:quick_converter/ui/features/currency/view/widgets/currency_input_section.dart';
 import 'package:quick_converter/ui/features/currency/viewmodel/converter_viewmodel.dart';
@@ -147,7 +149,7 @@ class _ConverterPageState extends State<ConverterPage> {
             ElevatedButton(
               onPressed: viewModel.isLoading
                   ? null
-                  : () {
+                  : () async {
                       _formatAmountInput();
                       if (_fromCurrency != null &&
                           _toCurrency != null &&
@@ -157,12 +159,27 @@ class _ConverterPageState extends State<ConverterPage> {
                                 .replaceAll(',', '.')) ??
                             0.0;
                         if (amount > 0) {
-                          viewModel.performConversion(
+                          await viewModel.performConversion(
                             from: _fromCurrency!,
                             to: _toCurrency!,
                             amount:
                                 _fromAmountController.text.replaceAll(',', '.'),
                           );
+                          if (viewModel.conversionResult != null &&
+                              viewModel.errorMessage == null) {
+                            Provider.of<HistoryNotifier>(context, listen: false)
+                                .addToHistory(
+                              HistoryItem(
+                                from: _fromCurrency!,
+                                to: _toCurrency!,
+                                amount: _fromAmountController.text,
+                                result: viewModel
+                                    .conversionResult!.convertedValue
+                                    .replaceAll('.', ','),
+                                date: DateTime.now(),
+                              ),
+                            );
+                          }
                         }
                       }
                     },

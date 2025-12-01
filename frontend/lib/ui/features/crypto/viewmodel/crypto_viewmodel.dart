@@ -52,13 +52,12 @@ class CryptoViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final futures = await Future.wait([
-        _repository.convert(from: crypto, to: 'BRL', amount: amount),
-        _repository.convert(from: crypto, to: 'USD', amount: amount),
-      ]);
-
-      _resultBrl = futures[0];
-      _resultUsd = futures[1];
+      _resultBrl =
+          await _repository.convert(from: crypto, to: 'BRL', amount: amount);
+      notifyListeners();
+      await Future.delayed(const Duration(milliseconds: 500));
+      _resultUsd =
+          await _repository.convert(from: crypto, to: 'USD', amount: amount);
     } catch (e) {
       _conversionError = 'Erro ao converter: $e';
     } finally {
