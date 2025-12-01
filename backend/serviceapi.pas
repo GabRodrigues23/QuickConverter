@@ -156,6 +156,9 @@ begin
       Rate_From_To_BRL := GetRate(FromCur, 'BRL');
       Rate_To_To_BRL := GetRate(ToCur, 'BRL');
 
+      if Rate_From_To_BRL <> 0 then
+        Sleep(500);
+
       if Rate_To_To_BRL = 0 then
       begin
         WriteLn('[LOGIC ERROR] Divisao por zero em conversao cruzada. Cotacao de ',
