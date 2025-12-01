@@ -1,10 +1,8 @@
-// ignore_for_file: avoid_print
-
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-import '../../core/constants.dart';
-import '../model/conversion_result.dart';
+import 'package:quick_converter/core/constants.dart';
+import 'package:quick_converter/data/model/conversion_result.dart';
 
 class ConversionRepository {
   // Currencies

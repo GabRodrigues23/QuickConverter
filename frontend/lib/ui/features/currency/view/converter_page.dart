@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quick_converter/core/notifiers/history_notifier.dart';
-import 'package:quick_converter/data/model/history_item.dart';
 
+import 'package:quick_converter/data/model/history_item.dart';
+import 'package:quick_converter/core/notifiers/history_notifier.dart';
 import 'package:quick_converter/ui/features/currency/view/widgets/currency_input_section.dart';
 import 'package:quick_converter/ui/features/currency/viewmodel/converter_viewmodel.dart';
 

@@ -1,5 +1,6 @@
-import 'package:quick_converter/core/theme/app_themes.dart';
 import 'package:flutter/material.dart';
+
+import 'package:quick_converter/core/theme/app_themes.dart';
 
 class ThemeNotifier extends ChangeNotifier {
   AppThemeType _currentTheme = AppThemeType.blue;

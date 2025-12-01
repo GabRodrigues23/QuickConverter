@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:quick_converter/data/model/conversion_result.dart';
+
 import 'package:quick_converter/data/repository/conversion_repository.dart';
+import 'package:quick_converter/data/model/conversion_result.dart';
 
 class ConverterViewModel extends ChangeNotifier {
   final ConversionRepository _repository;

@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:quick_converter/ui/shared/widgets/side_bar_widget.dart';
 import 'package:quick_converter/ui/features/currency/view/converter_page.dart';
 import 'package:quick_converter/ui/features/crypto/view/crypto_page.dart';
-
-import 'package:quick_converter/core/notifiers/menu_notifier.dart';
 import 'package:quick_converter/core/notifiers/theme_notifier.dart';
 import 'package:quick_converter/core/theme/app_themes.dart';
-import 'package:quick_converter/ui/shared/widgets/side_bar_widget.dart';
+import 'package:quick_converter/core/notifiers/menu_notifier.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({super.key});

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 enum ActivePage {
-  currency, // Conversor de Moedas
-  crypto, // Criptomoedas
+  currency,
+  crypto,
 }
 
 class MenuNotifier extends ChangeNotifier {

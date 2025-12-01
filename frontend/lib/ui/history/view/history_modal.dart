@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import 'package:quick_converter/core/notifiers/history_notifier.dart';
 
 class HistoryModal extends StatelessWidget {
