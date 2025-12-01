@@ -44,18 +44,35 @@ class _CryptoPageState extends State<CryptoPage> {
     super.dispose();
   }
 
-  Future<void> _onConvert(CryptoViewModel viewModel) async {
+  void _formatAmountInput() {
     final text = _amountController.text.replaceAll(',', '.');
-    if (text.isEmpty || _selectedCrypto == null) return;
-
     final value = double.tryParse(text);
+    if (value == null) return;
+
+    final formattedWithDot = value.toStringAsFixed(2);
+    final formattedWithComma = formattedWithDot.replaceAll('.', ',');
+
+    _amountController.text = formattedWithComma;
+  }
+
+  Future<void> _onConvert(CryptoViewModel viewModel) async {
+    final rawText = _amountController.text.replaceAll('.', ',');
+    final sanitizedText = rawText.replaceAll(',', '.');
+
+    final value = double.tryParse(sanitizedText);
+
     if (value != null) {
       _amountController.text = value.toStringAsFixed(2).replaceAll('.', ',');
+    } else {
+      return;
     }
+
+    if (sanitizedText.isEmpty || _selectedCrypto == null) return;
+    if (value <= 0) return;
 
     await viewModel.performCryptoConversion(
       crypto: _selectedCrypto!,
-      amount: text,
+      amount: sanitizedText,
     );
 
     if (viewModel.conversionError == null &&
@@ -117,6 +134,7 @@ class _CryptoPageState extends State<CryptoPage> {
               currencySymbols: cryptoSymbols,
               onCurrencyChanged: (val) => setState(() => _selectedCrypto = val),
               amountController: _amountController,
+              onEditingComplete: _formatAmountInput,
             ),
             const SizedBox(height: 30),
             ElevatedButton(
