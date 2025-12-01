@@ -7,6 +7,7 @@ interface
 uses
   SysUtils, fphttpclient, fpjson, jsonparser, DateUtils;
 
+function GetRate(FromCur, ToCur: string): double;
 function ConvertCurrency(FromCur, ToCur: string; Amount: double): double;
 
 implementation

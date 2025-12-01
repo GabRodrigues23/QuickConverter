@@ -17,10 +17,13 @@ var
 begin
   JSONArray := TJSONArray.Create;
   try
-    JSONArray.Add('USD');
-    JSONArray.Add('BRL');
-    JSONArray.Add('GBP');
-    JSONArray.Add('EUR');
+    JSONArray.Add('USD');   // Dólar
+    JSONArray.Add('BRL');   // Real
+    JSONArray.Add('GBP');   // Libra Esterlina
+    JSONArray.Add('EUR');   // Euro
+    JSONArray.Add('ARS');   // Peso Argentino
+    JSONArray.Add('JPY');   // Iene
+    JSONArray.Add('CHF');   // Franco Suiço
 
     Res.ContentType('application/json; charset=UTF-8').Send(JSONArray.AsJSON);
   except
