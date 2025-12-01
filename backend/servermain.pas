@@ -20,6 +20,4 @@ begin
   THorse.Get('/convert', THorseCallback(@ControllerConversion));
   THorse.Get('/currencies', THorseCallback(@ControllerCurrencies));
   THorse.Get('/crypto/currencies', THorseCallback(@ControllerCryptoCurrencies));
- end;
-
 end.
