@@ -7,6 +7,7 @@ import '../../core/constants.dart';
 import '../model/conversion_result.dart';
 
 class ConversionRepository {
+  // Currencies
   Future<List<String>> getAvailableCurrencies() async {
     final url = Uri.parse('$apiBaseUrl/currencies');
     print('Buscando lista de moedas em $url');
@@ -48,6 +49,25 @@ class ConversionRepository {
       print('Erro de conexão: $e');
       throw Exception(
           'Erro de conexão. Verifique se o servidor backend está ligado e acessível');
+    }
+  }
+
+  // Crypto Currencies
+  Future<List<String>> getAvailableCryptoCurrencies() async {
+    final url = Uri.parse('$apiBaseUrl/crypto/currencies');
+    print('Buscando lista de criptos em: $url');
+
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        final List<dynamic> jsonList = jsonDecode(response.body);
+        return List<String>.from(jsonList);
+      } else {
+        throw Exception('Falha ao carregar lista de criptos');
+      }
+    } catch (e) {
+      print('Erro ao buscar criptos: $e');
+      throw Exception('Não foi possível buscar as criptomoedas.');
     }
   }
 }
