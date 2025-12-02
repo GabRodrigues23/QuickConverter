@@ -24,7 +24,7 @@ class MainPage extends StatelessWidget {
         centerTitle: true,
         leading: Builder(
           builder: (context) => IconButton(
-            icon: Icon(Icons.menu, color: theme.iconTheme.color),
+            icon: Icon(Icons.menu),
             onPressed: () => Scaffold.of(context).openDrawer(),
           ),
         ),
@@ -70,7 +70,7 @@ class MainPage extends StatelessWidget {
               alignment: WrapAlignment.center,
               children: AppThemeType.values.map((themeType) {
                 final themeData = AppThemes.getTheme(themeType);
-                final primaryColor = themeData.colorScheme.primary;
+                final primaryColor = themeData.colorScheme.primaryFixed;
                 final isSelected = notifier.currentTheme == themeType;
                 return GestureDetector(
                   onTap: () {

@@ -10,7 +10,6 @@ class SidebarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final menuNotifier = Provider.of<MenuNotifier>(context, listen: false);
-
     final theme = Theme.of(context);
 
     return Drawer(
