@@ -41,6 +41,7 @@ Usuário → Flutter (View) → ViewModel → Repository → Lazarus API → Awe
 | `ServerMain` | Inicializa o servidor e registra as rotas. | `servermain.pas` |
 | `ControllerConversion` | Processa requisições de conversão (`/convert`). | `controller_conversion.pas` |
 | `ControllerCurrencies` | Fornece a lista de moedas disponíveis (`/currencies`). | `controller_currencies.pas` |
+| `ControllerCryptoCurrencies` | Fornece a lista de cryptomoedas disponíveis (`/crypto/currencies`). | `controller_crypto_currencies.pas` |
 | `ServiceAPI` | Faz chamadas à AwesomeAPI para obter a cotação. | `serviceapi.pas` |
 | `Utils` | Funções auxiliares. | `utils.pas` |
 
@@ -100,6 +101,7 @@ Para otimizar o desempenho e evitar exceder os limites de requisição da Awesom
 /lib
  ├─ core/
  │   ├─ notifiers/
+ │   │   ├─ history_notifier.dart
  │   │   ├─ menu_notifier.dart
  │   │   └─ theme_notifier.dart
  │   ├─ theme/
@@ -107,33 +109,46 @@ Para otimizar o desempenho e evitar exceder os limites de requisição da Awesom
  │   └─ constants.dart
  ├─ data/
  │   ├─ model/
- │   │   └─ conversion_result.dart
+ │   │   ├─ conversion_result.dart
+ │   │   └─ history_item.dart
  │   └─ repository/
- │      └─ conversion_repository.dart
+ │       └─ conversion_repository.dart
  ├─ ui/
- │   ├─ view/
- │   │   ├─ widgets/
- │   │   │   ├─ side_bar_widget.dart
- │   │   │   └─ currency_input_section.dart
- │   │   └─ converter_page.dart
- │   └─ viewmodel/
- │      └─ converter_viewmodel.dart
+ │   ├─ features/
+ │   │   ├─ crypto/
+ │   │   │   ├─ view/
+ │   │   │   │   └─ crypto_page.dart
+ │   │   │   └─ viewmodel/
+ │   │   │       └─ crypto_viewmodel.dart
+ │   │   └─ currency/
+ │   │       ├─ view/
+ │   │       │   ├─ widgets/
+ │   │       │   │   └─ currency_input_section.dart
+ │   │       │   └─ convert_page.dart
+ │   │       └─ viewmodel/
+ │   │           └─ converter_viewmodel.dart
+ │   ├─ history/
+ │   │   └─ view/
+ │   │       └─ history_modal.dart
+ │   ├─ shared/
+ │   │   └─ widgets/
+ │   │       └─ side_bar_widget.dart
+ │   └─ view/
+ │       └─ main_page.dart
  ├─ app.dart
  └─ main.dart
 ```
 
 ### 4.2. Principais Classes e Notifiers
 
-| Arquivo | Classe | Descrição |
+Classe | Tipo | Descrição |
 | :--- | :--- | :--- |
-| `conversion_repository.dart`| `ConversionRepository` | Responsável pela comunicação HTTP com o backend. |
-| `converter_viewmodel.dart`| `ConverterViewModel` | Gerencia o estado e lógica da tela de conversão. |
-| `theme_notifier.dart` | `ThemeNotifier` | Gerencia o estado global do tema visual da aplicação. |
-| `menu_notifier.dart` | `MenuNotifier` | Gerencia o estado global do menu lateral (navegação). |
-| `conversion_result.dart`| `ConversionResult` | Modelo dos dados de resultado da conversão. |
-| `converter_page.dart`| `ConverterPage` | Widget principal que constrói a UI da tela de conversão. |
-| `side_bar_widget.dart` | `SidebarWidget` | Widget que define o menu lateral (Drawer). |
-| `currency_input_section.dart`| `CurrencyInputSection`| Widget reutilizável para o bloco de input (dropdown + textfield). |
+| `ConversionRepository` | Repository | Centraliza chamadas HTTP para o backend (Fiat e Cripto). |
+| `ConverterViewModel` | ViewModel | Lógica da tela de Moedas Fiat. |
+| `CryptoViewModel` | ViewModel | Lógica da tela de Criptomoedas (converte para BRL e USD sequencialmente). |
+| `HistoryNotifier` | Notifier | Gerencia a lista de histórico de conversões e a persistência com `shared_preferences`. |
+| `ThemeNotifier` | Notifier | Gerencia a troca de temas (Azul, Vermelho, Verde, Amarelo). |
+| `MainPage` | Widget | Atua como "Roteador", trocando o corpo da tela baseado no Menu. |
 
 ### 4.3. Gerenciamento de Configuração (.env)
 
@@ -190,9 +205,12 @@ O endpoint `/last/` retorna um JSON onde a chave é o par concatenado.
 
 Esta seção descreve os endpoints fornecidos pelo nosso próprio backend Lazarus.
 
+
+
 | Método | Endpoint | Descrição | Exemplo de Resposta |
 | :--- | :--- | :--- | :--- |
 | `GET` | `/currencies` | Retorna uma lista com os códigos das moedas suportadas pela aplicação. | `["USD", "BRL", "EUR", ...]` |
+| `GET` | `/crypto/currencies` | Retorna uma lista com os códigos das cryptomoedas suportadas pela aplicação. | `["BTC", "ETH", "XRP", "DOGE"]` |
 | `GET` | `/convert` | Realiza a conversão com base nos parâmetros `from`, `to` e `amount`. | `{"originalAmount": "100.00", ...}` |
 
 ---
@@ -246,21 +264,23 @@ O `Amount` do usuário é então multiplicado pela `FinalRate` calculada.
 | :--- | :--- | :--- |
 | `v0.1` | 14/10/2025 | Estrutura inicial do projeto |
 | `v0.2` | 14/10/2025 | Implementação do backend e integração com AwesomeAPI. |
-| `v0.3` | 15/10/2025 |  Estrutura Inicial de layout da UI. |
+| `v0.3` | 15/10/2025 | Estrutura Inicial de layout da UI. |
 | `v0.4` | 18/10/2025 | Conexão Full Stack (Frontend ↔ Backend) e refatoração da UI. |
 | `v1.0` | 19/10/2025 | **Primeira versão estável com deploy do backend na AWS.** |
 | `v1.1` | 23/10/2025 | Adição de armazenamento em Cache. |
 | `v1.2` | 28/10/2025 | Adição de Temas Customizáveis, Sidebar de Navegação e melhorias de UI. |
 | `v1.3` | 30/10/2025 | Implementação de Lógica de Conversão Cruzada. |
 | `v2.0` | 03/11/2025 | **Segunda versão estável.** |
+| `v2.1` | 01/12/2025 | Adição do Módulo de Cryptomoedas |
+| `v2.2` | 01/12/2025 | Implementação da lógica e modal de Histórico |
+| `v2.3` | 01/12/2025 | Refatoração MVVM |
+| `v3.0` | 01/12/2025 | **Terceira versão estável.** |
 
 ---
 
 ## 🚀 10. Melhorias Futuras
 
 -   **Implementar lógica de valores inteiros:** Refatorar o backend para tratar valores monetários como inteiros (centavos) para evitar erros de precisão de ponto flutuante (`double`).
--   **Adicionar histórico de conversões:** Salvar as conversões localmente no dispositivo.
--   **Adicionar conversões de Cryptomoedas:** Adicionar uma nova seção/API para moedas digitais.
 -   **Implementar Cache no Cliente:** Adicionar uma segunda camada de cache (no Flutter) para melhorar a performance da UI e permitir uso offline básico.
 
 ---
