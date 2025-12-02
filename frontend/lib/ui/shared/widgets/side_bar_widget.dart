@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:QuickConverter/core/notifiers/menu_notifier.dart';
+import 'package:quick_converter/core/notifiers/menu_notifier.dart';
+import 'package:quick_converter/ui/history/view/history_modal.dart';
 
 class SidebarWidget extends StatelessWidget {
   const SidebarWidget({super.key});
@@ -9,7 +10,6 @@ class SidebarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final menuNotifier = Provider.of<MenuNotifier>(context, listen: false);
-
     final theme = Theme.of(context);
 
     return Drawer(
@@ -33,7 +33,7 @@ class SidebarWidget extends StatelessWidget {
             iconColor: theme.listTileTheme.iconColor ?? theme.iconTheme.color,
             tileColor: theme.listTileTheme.tileColor,
             onTap: () {
-              menuNotifier.updateMenuIndex(0);
+              menuNotifier.setPage(ActivePage.currency);
               Navigator.pop(context);
             },
           ),
@@ -44,24 +44,8 @@ class SidebarWidget extends StatelessWidget {
             iconColor: theme.listTileTheme.iconColor ?? theme.iconTheme.color,
             tileColor: theme.listTileTheme.tileColor,
             onTap: () {
-              menuNotifier.updateMenuIndex(1);
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text('Aviso'),
-                    content: Text('Conteúdo em Desenvolvimento!'),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: Text('Fechar'),
-                      ),
-                    ],
-                  );
-                },
-              );
+              menuNotifier.setPage(ActivePage.crypto);
+              Navigator.pop(context);
             },
           ),
           ListTile(
@@ -71,23 +55,12 @@ class SidebarWidget extends StatelessWidget {
             iconColor: theme.listTileTheme.iconColor ?? theme.iconTheme.color,
             tileColor: theme.listTileTheme.tileColor,
             onTap: () {
-              menuNotifier.updateMenuIndex(2);
-              showDialog(
+              Navigator.pop(context);
+              showModalBottomSheet(
                 context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text('Aviso'),
-                    content: Text('Conteúdo em Desenvolvimento!'),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: Text('Fechar'),
-                      ),
-                    ],
-                  );
-                },
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                builder: (context) => const HistoryModal(),
               );
             },
           ),

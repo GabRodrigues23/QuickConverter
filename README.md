@@ -1,6 +1,10 @@
-# 🚀 QuickConverter (v2.0)
+# 🚀 QuickConverter (v3.0)
 
-<div align="center"><img src="https://i.imgur.com/SXrzs90.png" alt="QuickConverter Screenshot" width="300"/>
+<div align="center">
+<img src="https://i.imgur.com/Mb0gJ75.png" alt="QuickConverter Screen Blue" width="150"/> 
+<img src="https://i.imgur.com/HbP0KJb.png" alt="QuickConverter Screen Red" width="150"/> 
+<img src="https://i.imgur.com/VcOueFM.png" alt="QuickConverter Screen Yellow" width="150"/> 
+<img src="https://i.imgur.com/ZAwhbrH.png" alt="QuickConverter Screen Green" width="150"/> 
 
 ![Lazarus](https://img.shields.io/badge/Lazarus-Pascal-blue?style=for-the-badge&logo=delphi)
 ![Flutter](https://img.shields.io/badge/Flutter-Dart-02569B?style=for-the-badge&logo=flutter)
@@ -14,11 +18,13 @@ Conversor de moedas full stack robusto e performático, construído com **Lazaru
 
 ## ✨ Features
 
-* **Cache no Servidor (Lazarus):** O backend armazena cotações em cache para reduzir drasticamente a latência e evitar bloqueios por excesso de requisições (`Erro 429`) da API externa.
-* **Temas Customizáveis:** Seletor de paleta de cores (Azul, Vermelho, Amarelo e Verde) com gerenciamento de estado via Provider, permitindo total personalização da UI.
-* **Interface Reativa (Flutter):** UI moderna com `Sidebar` para navegação, `Dropdowns` dinâmicos e formatação de input em tempo real para uma experiência de usuário fluida.
-* **Troca Rápida (Swap):** Funcionalidade para inverter moedas e valores entre os campos "From" e "To" com um único toque.
-* **Deploy na AWS:** Aplicação completa implantada em um servidor EC2, acessível publicamente.
+* **💰 Conversão Multi-Moeda:** Suporte para conversão em tempo real entre as principais moedas fiduciárias (USD, BRL, EUR, etc.) utilizando a [AwesomeAPI](https://docs.awesomeapi.com.br).
+* **₿ Criptomoedas:** Módulo dedicado para conversão de criptomoedas (Bitcoin, Ethereum, etc.) com cotação simultânea em Dólar e Real.
+* **📜 Histórico Local:** Registro automático das conversões realizadas, persistido localmente no dispositivo.
+* **⚡ Cache Inteligente:** Backend em Lazarus com sistema de cache para reduzir latência e prevenir bloqueios de API (`Erro 429`).
+* **🎨 Temas Customizáveis:** Interface moderna com seletor de paletas de cores (Azul, Vermelho, Amarelo e Verde) gerenciado via Provider.
+* **📱 Interface Reativa:** Navegação fluida com Sidebar, validação de inputs e formatação em tempo real.
+* **☁️ Deploy na AWS:** Backend totalmente funcional hospedado em servidor EC2.
 
 ---
 
@@ -29,10 +35,10 @@ Conversor de moedas full stack robusto e performático, construído com **Lazaru
     * **Framework:** [Horse](https://github.com/HashLoad/horse)
     * **Middleware JSON:** [Jhonson](https://github.com/HashLoad/jhonson)
 * **Frontend:**
-    * **Framework:** [Flutter](https://flutter.dev/)
-    * **Linguagem:** Dart
+    * **Framework:** [Flutter](https://flutter.dev/) (Dart)
     * **Gerenciamento de Estado:** Provider (`ChangeNotifier`)
     * **Arquitetura:** MVVM aprimorada (com camada de `Repository`)
+    * **Persistência:** `shared_preferences` para histórico local
 * **Infraestrutura (Deploy):**
     * **Cloud:** [Amazon Web Services (AWS)](https://aws.amazon.com/)
     * **Serviço:** EC2 (Windows Server 2019)
@@ -46,7 +52,6 @@ Conversor de moedas full stack robusto e performático, construído com **Lazaru
 * [Lazarus IDE](https://www.lazarus-ide.org/) instalado.
 * [Flutter SDK](https://flutter.dev/docs/get-started/install) instalado.
 * DLLs do OpenSSL (`libeay32.dll` e `ssleay32.dll`) na pasta do backend.
-* Biblioteca [Jhonson](https://github.com/HashLoad/jhonson) configurada no projeto Lazarus.
 
 ### 1. Backend (Lazarus)
 
@@ -61,8 +66,9 @@ Conversor de moedas full stack robusto e performático, construído com **Lazaru
     ```
     API_URL=http://localhost:9000
     ```
-4.  Execute o app em um emulador, navegador ou dispositivo físico:
+4.  Instale as dependências e execute o app:
     ```bash
+    flutter pub get
     flutter run
     ```
 

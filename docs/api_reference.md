@@ -48,12 +48,39 @@ Retorna uma lista com os códigos das moedas suportadas pela aplicação. Este e
           "USD",
           "BRL",
           "GBP",
-          "EUR"
+          "EUR",
+          "ARS",
+          "JPY",
+          "CHF"
         ]
         ```
 * **Resposta de Erro (`500 Internal Server Error`)**
     * Ocorre se o backend falhar ao gerar a lista. O corpo da resposta conterá uma mensagem de erro em texto.
 
+---
+
+### `GET /crypto/currencies`
+
+Retorna uma lista com os códigos das criptomoedas suportadas.
+
+* **Parâmetros:** Nenhum.
+* **Exemplo de Requisição**
+    ```
+    GET http://localhost:9000/crypto/currencies
+    ```
+* **Exemplo de Resposta de Sucesso (`200 OK`)**
+    * **Content-Type:** `application/json`
+    * **Corpo:**
+        ```json
+        [
+          "BTC",
+          "ETH",
+          "XRP",
+          "DOGE"
+        ]
+        ```
+* **Resposta de Erro (`500 Internal Server Error`)**
+    * Ocorre se o backend falhar ao gerar a lista. O corpo da resposta conterá uma mensagem de erro em texto.
 ---
 
 ### `GET /convert`

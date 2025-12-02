@@ -1,23 +1,26 @@
 import 'package:flutter/material.dart';
 
-class MenuNotifier extends ChangeNotifier {
-  int selectedIndex = 0;
+enum ActivePage {
+  currency,
+  crypto,
+}
 
-  void updateMenuIndex(int index) {
-    selectedIndex = index;
-    notifyListeners();
+class MenuNotifier extends ChangeNotifier {
+  ActivePage _currentPage = ActivePage.currency;
+
+  ActivePage get currentPage => _currentPage;
+
+  String get currentTitle {
+    switch (_currentPage) {
+      case ActivePage.currency:
+        return 'Conversor de Moedas';
+      case ActivePage.crypto:
+        return 'Conversor de Criptomoedas';
+    }
   }
 
-  String get currentSectionTitle {
-    switch (selectedIndex) {
-      case 0:
-        return "Conversor de Moedas";
-      case 1:
-        return "Conversor de CryptoMoedas";
-      case 2:
-        return "Historico";
-      default:
-        return "null";
-    }
+  void setPage(ActivePage page) {
+    _currentPage = page;
+    notifyListeners();
   }
 }

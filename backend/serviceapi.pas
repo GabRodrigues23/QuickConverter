@@ -7,6 +7,7 @@ interface
 uses
   SysUtils, fphttpclient, fpjson, jsonparser, DateUtils;
 
+function GetRate(FromCur, ToCur: string): double;
 function ConvertCurrency(FromCur, ToCur: string; Amount: double): double;
 
 implementation
@@ -154,6 +155,9 @@ begin
       WriteLn('[LOGIC] Caso 3: Conversao cruzada (', FromCur, ' -> ', ToCur, ')');
       Rate_From_To_BRL := GetRate(FromCur, 'BRL');
       Rate_To_To_BRL := GetRate(ToCur, 'BRL');
+
+      if Rate_From_To_BRL <> 0 then
+        Sleep(500);
 
       if Rate_To_To_BRL = 0 then
       begin

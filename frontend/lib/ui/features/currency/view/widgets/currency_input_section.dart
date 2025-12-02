@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:QuickConverter/core/constants.dart';
+import 'package:quick_converter/core/constants.dart';
 
 class CurrencyInputSection extends StatelessWidget {
   final String label;
